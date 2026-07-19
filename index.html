@@ -3,35 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AviaJet Institutional Terminal</title>
+    <title>AviaJet Terminal</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    
-    <!-- Подключение шрифтов для премиального вида -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
-    
-    <!-- Подключение Tailwind (через CDN для превью, если у вас Vite - он подхватит классы) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Montserrat', 'sans-serif'] },
-                    colors: { brand: '#10b981', 'brand-glow': 'rgba(16, 185, 129, 0.4)', 'deep-zinc': '#09090b' },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['Montserrat', 'Inter', 'sans-serif']
+                    },
+                    colors: {
+                        brand: '#10b981',
+                        'brand-glow': 'rgba(16, 185, 129, 0.4)',
+                        'deep-zinc': '#09090b'
+                    },
                     animation: {
                         'float': 'float 3s ease-in-out infinite',
                         'grid-move': 'grid-move 2s linear infinite',
-                        'pulse-fast': 'pulse 0.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'turbulence': 'turbulence 2.5s ease-in-out infinite', /* Новая анимация */
+                        'turbulence': 'turbulence 2.5s ease-in-out infinite'
                     },
                     keyframes: {
-                        float: { '0%, 100%': { transform: 'translateY(0) rotate(0deg)' }, '50%': { transform: 'translateY(-8px) rotate(1deg)' } },
-                        'grid-move': { '0%': { backgroundPosition: '0 0' }, '100%': { backgroundPosition: '-40px 40px' } },
-                        /* Имитация воздушных ям (резко вниз, потом наверх) */
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-8px) rotate(1deg)' }
+                        },
+                        'grid-move': {
+                            '0%': { backgroundPosition: '0 0' },
+                            '100%': { backgroundPosition: '-40px 40px' }
+                        },
                         turbulence: {
                             '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
                             '30%': { transform: 'translateY(-15px) rotate(3deg)' },
-                            '55%': { transform: 'translateY(30px) rotate(-8deg)' }, /* Эффект резкого падения */
+                            '55%': { transform: 'translateY(30px) rotate(-8deg)' },
                             '75%': { transform: 'translateY(-5px) rotate(2deg)' }
                         }
                     }
@@ -39,201 +48,387 @@
             }
         }
     </script>
-
     <style>
-        /* Кастомные эффекты и стекломорфизм */
-        body { -webkit-tap-highlight-color: transparent; }
+        :root {
+            --brand: #10b981;
+            --glass-bg: rgba(24, 24, 27, 0.65);
+            --bg-primary: #09090b;
+            --text-primary: #f4f4f5;
+        }
+        .light {
+            --bg-primary: #f4f4f5;
+            --text-primary: #09090b;
+            --glass-bg: rgba(255, 255, 255, 0.8);
+        }
+        * {
+            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
+        }
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', system-ui, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            height: 100dvh;
+            transition: background 0.3s, color 0.3s;
+        }
         .glass-panel {
-            background: rgba(24, 24, 27, 0.65);
+            background: var(--glass-bg);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: background 0.3s;
         }
-        .text-glow { text-shadow: 0 0 20px rgba(16, 185, 129, 0.6); }
+        .text-glow {
+            text-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+        }
         .grid-bg-animated {
-            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
             background-size: 40px 40px;
         }
-        .flame-gradient {
-            background: linear-gradient(90deg, #ff4d4d, #ff9e00, transparent);
-            filter: blur(4px);
-        }
-        
-        /* Скрытие скроллбара */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .history-mask {
+            mask-image: linear-gradient(to right, black 80%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to right, black 80%, transparent 100%);
+        }
+        .pulse-dot {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+        .bet-btn:active {
+            transform: scale(0.95);
+        }
+        @supports (padding: max(0px)) {
+            .safe-bottom {
+                padding-bottom: max(20px, env(safe-area-inset-bottom));
+            }
+        }
+        #plane-container {
+            transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+            will-change: transform;
+        }
+        #plane-container img {
+            filter: drop-shadow(0 15px 25px rgba(0,0,0,.45)) brightness(1.1);
+        }
+        .rank-badge {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #000;
+        }
+        .rank-badge.gold { background: linear-gradient(135deg, #fbbf24, #d97706); }
+        .rank-badge.silver { background: linear-gradient(135deg, #9ca3af, #6b7280); }
+        .rank-badge.bronze { background: linear-gradient(135deg, #d97706, #92400e); }
+        .toggle-switch {
+            width: 44px;
+            height: 24px;
+            background: #3f3f46;
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s;
+            flex-shrink: 0;
+        }
+        .toggle-switch.active {
+            background: var(--brand);
+        }
+        .toggle-switch .thumb {
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .toggle-switch.active .thumb {
+            transform: translateX(20px);
+        }
+        .light .glass-panel {
+            border-color: rgba(0,0,0,0.08);
+        }
+        .light .bg-zinc-900 { background: #e4e4e7; }
+        .light .bg-zinc-800 { background: #d4d4d8; }
+        .light .border-zinc-800 { border-color: #d4d4d8; }
+        .light .text-zinc-400 { color: #71717a; }
+        .light .text-zinc-500 { color: #52525b; }
+        .light .text-zinc-600 { color: #3f3f46; }
+        .light .text-zinc-300 { color: #27272a; }
+        .light .border-zinc-700 { border-color: #a1a1aa; }
+        .light .bg-zinc-900/80 { background: rgba(228, 228, 231, 0.8); }
+        .light .bg-zinc-900/50 { background: rgba(228, 228, 231, 0.5); }
+        .light .bg-zinc-800/50 { background: rgba(212, 212, 216, 0.5); }
+        .light #game-screen { background: #e4e4e7; border-color: #d4d4d8; }
+        .light .grid-bg-animated { background-image: linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px); }
+        .light .text-glow { text-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
+        .light nav { background: rgba(255,255,255,0.9) !important; }
+        .light #add-card-modal { background: rgba(255,255,255,0.7) !important; }
+        .light #add-card-modal .glass-panel { background: rgba(255,255,255,0.95) !important; }
+        .light .text-white { color: #09090b; }
+        .light .text-zinc-100 { color: #09090b; }
+        .light .bg-zinc-950/90 { background: rgba(255,255,255,0.9); }
+        .light .bg-zinc-900/30 { background: rgba(228, 228, 231, 0.3); }
+        .light .bg-zinc-900/80 { background: rgba(228, 228, 231, 0.8); }
+        .light .bg-zinc-900 { background: #e4e4e7; }
+        .light .bg-zinc-800 { background: #d4d4d8; }
+        .light .bg-zinc-700 { background: #a1a1aa; }
+        .light .border-zinc-800 { border-color: #d4d4d8; }
+        .light .border-zinc-700 { border-color: #a1a1aa; }
+        .light .text-zinc-400 { color: #71717a; }
+        .light .text-zinc-500 { color: #52525b; }
+        .light .text-zinc-600 { color: #3f3f46; }
+        .light .text-zinc-300 { color: #27272a; }
+        .light .text-zinc-200 { color: #18181b; }
+        .light .hover\:text-zinc-300:hover { color: #3f3f46; }
+        .light .bg-zinc-900/50 { background: rgba(228, 228, 231, 0.5); }
+        .light .bg-zinc-800/50 { background: rgba(212, 212, 216, 0.5); }
+        .light .bg-zinc-800/30 { background: rgba(212, 212, 216, 0.3); }
+        .light .bg-brand\/10 { background: rgba(16, 185, 129, 0.1); }
+        .light .border-brand\/20 { border-color: rgba(16, 185, 129, 0.2); }
+        .light .border-brand\/30 { border-color: rgba(16, 185, 129, 0.3); }
+        .light .shadow-\[0_0_20px_rgba\(16\,185\,129\,0\.3\)\] { box-shadow: 0 0 20px rgba(16, 185, 129, 0.15); }
+        .light .shadow-\[0_0_15px_rgba\(16\,185\,129\,0\.4\)\] { box-shadow: 0 0 15px rgba(16, 185, 129, 0.15); }
+        .light .from-brand\/10 { --tw-gradient-from: rgba(16, 185, 129, 0.1); }
+        .light .text-amber-400 { color: #d97706; }
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
     </style>
-
-    <!-- Эмулятор Telegram WebApp -->
-
-  <script type="module" crossorigin src="/assets/index-DpRjFuaK.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-4aeLuxE_.css">
+  <script type="module" crossorigin src="/assets/index-DrXo1-7i.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-ZkXqWjst.css">
 </head>
-<body class="flex flex-col h-screen antialiased select-none bg-deep-zinc text-zinc-100 pb-20 font-sans overflow-hidden">
+<body class="flex flex-col h-screen antialiased select-none pb-20 font-sans overflow-hidden">
 
-    <!-- Web Audio API Звуковой движок (Синтезатор, без файлов) -->
     <script>
+        (function() {
+            try {
+                if (window.Telegram?.WebApp) {
+                    window.Telegram.WebApp.ready();
+                    window.Telegram.WebApp.expand();
+                }
+            } catch(e) {}
+        })();
+
         const SoundEngine = {
             ctx: null,
-            init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
+            initialized: false,
+            enabled: true,
+            init() {
+                if (this.initialized || !this.enabled) return;
+                try {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    this.initialized = true;
+                } catch(e) {}
+            },
+            toggle() {
+                this.enabled = !this.enabled;
+                if (!this.enabled && this.ctx) {
+                    this.ctx.close();
+                    this.initialized = false;
+                    this.ctx = null;
+                }
+                return this.enabled;
+            },
             playClick() {
-                this.init(); const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
-                osc.type = 'sine'; osc.frequency.setValueAtTime(600, this.ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(800, this.ctx.currentTime + 0.05);
-                gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.05);
-                osc.connect(gain); gain.connect(this.ctx.destination);
-                osc.start(); osc.stop(this.ctx.currentTime + 0.05);
+                if (!this.enabled) return;
+                if (!this.initialized) this.init();
+                if (!this.ctx) return;
+                try {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(600, this.ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(800, this.ctx.currentTime + 0.05);
+                    gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.08);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start();
+                    osc.stop(this.ctx.currentTime + 0.08);
+                } catch(e) {}
             },
             playCrash() {
-                this.init(); const bufferSize = this.ctx.sampleRate * 0.5; const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
-                const data = buffer.getChannelData(0); for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
-                const noise = this.ctx.createBufferSource(); noise.buffer = buffer;
-                const filter = this.ctx.createBiquadFilter(); filter.type = 'lowpass';
-                filter.frequency.setValueAtTime(1000, this.ctx.currentTime);
-                filter.frequency.exponentialRampToValueAtTime(10, this.ctx.currentTime + 0.5);
-                const gain = this.ctx.createGain(); gain.gain.setValueAtTime(0.5, this.ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.5);
-                noise.connect(filter); filter.connect(gain); gain.connect(this.ctx.destination);
-                noise.start();
+                if (!this.enabled) return;
+                if (!this.initialized) this.init();
+                if (!this.ctx) return;
+                try {
+                    const bufferSize = this.ctx.sampleRate * 0.4;
+                    const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+                    const data = buffer.getChannelData(0);
+                    for (let i = 0; i < bufferSize; i++) {
+                        data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize);
+                    }
+                    const noise = this.ctx.createBufferSource();
+                    noise.buffer = buffer;
+                    const filter = this.ctx.createBiquadFilter();
+                    filter.type = 'lowpass';
+                    filter.frequency.setValueAtTime(800, this.ctx.currentTime);
+                    filter.frequency.exponentialRampToValueAtTime(50, this.ctx.currentTime + 0.3);
+                    const gain = this.ctx.createGain();
+                    gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.3);
+                    noise.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    noise.start();
+                    noise.stop(this.ctx.currentTime + 0.3);
+                } catch(e) {}
             }
         };
         window.SoundEngine = SoundEngine;
         document.addEventListener('click', () => SoundEngine.init(), { once: true });
+        document.addEventListener('touchstart', () => SoundEngine.init(), { once: true });
     </script>
 
-    <!-- Топ-бар -->
-    <header class="flex justify-between items-center px-4 pt-5 pb-3 z-20 shrink-0 bg-transparent">
+    <header class="flex justify-between items-center px-4 pt-5 pb-3 z-20 shrink-0">
         <div class="glass-panel rounded-full flex items-center space-x-3 pl-1.5 pr-4 py-1.5 shadow-lg">
-            <div id="user-avatar-placeholder" class="w-8 h-8 bg-gradient-to-tr from-brand to-emerald-300 rounded-full flex items-center justify-center font-bold text-sm text-zinc-900 overflow-hidden shadow-inner">
-                О
-            </div>
+            <div id="user-avatar" class="w-8 h-8 bg-gradient-to-tr from-brand to-emerald-300 rounded-full flex items-center justify-center font-bold text-sm text-zinc-900 shadow-inner">О</div>
             <span id="username" class="font-bold text-sm text-zinc-100">Остап</span>
         </div>
-        <div class="glass-panel rounded-full flex items-center space-x-2 pl-4 pr-1.5 py-1.5 shadow-lg">
-            <span id="balance" class="font-display font-black text-lg tracking-wide text-white">0.00</span>
-            <span class="text-brand font-bold text-sm pr-2">₽</span>
-            <div id="btn-open-deposit" onclick="window.SoundEngine.playClick()" class="w-8 h-8 bg-brand text-zinc-900 rounded-full flex items-center justify-center font-black text-xl cursor-pointer hover:scale-105 active:scale-95 transition-transform shadow-[0_0_15px_rgba(16,185,129,0.4)]">+</div>
+        <div class="flex items-center gap-3">
+            <div id="status-indicator" class="glass-panel rounded-full px-3 py-1.5 flex items-center gap-2 shadow-lg border border-zinc-800/50">
+                <span id="status-dot" class="w-2 h-2 rounded-full bg-brand pulse-dot"></span>
+                <span id="status-text-short" class="text-[9px] font-black uppercase tracking-widest text-zinc-300 whitespace-nowrap">Ожидание</span>
+            </div>
+            <div class="glass-panel rounded-full flex items-center space-x-2 pl-4 pr-1.5 py-1.5 shadow-lg">
+                <span id="balance" class="font-display font-black text-lg tracking-wide text-white">0.00</span>
+                <span class="text-brand font-bold text-sm pr-2">₽</span>
+                <button onclick="window.SoundEngine.playClick()" class="w-8 h-8 bg-brand text-zinc-900 rounded-full flex items-center justify-center font-black text-xl hover:scale-105 active:scale-95 transition-transform shadow-[0_0_15px_rgba(16,185,129,0.4)]">+</button>
+            </div>
         </div>
     </header>
 
     <div class="flex-1 relative px-4 flex flex-col h-full gap-3 overflow-hidden">
         
-        <!-- ИГРОВОЙ ЭКРАН (Crash) -->
-        <main id="view-crash" class="view-section view-active flex flex-col h-full gap-3">
+        <main id="view-crash" class="view-active flex flex-col h-full gap-3">
             
-            <!-- Радар / Игровое поле -->
             <div id="game-screen" class="w-full h-56 bg-zinc-900 rounded-3xl relative overflow-hidden flex items-center justify-center border border-zinc-800 shadow-2xl shrink-0">
-            <div class="absolute inset-0 grid-bg-animated animate-grid-move opacity-30"></div>
-            <div class="absolute bottom-0 w-full h-24 bg-gradient-to-t from-brand-glow to-transparent opacity-20"></div>
-
-            <div class="absolute top-6 left-6 text-left z-10">
-                <h1 id="multiplier" class="font-display text-6xl font-black text-white transition-colors duration-100 tracking-tighter text-glow drop-shadow-2xl">
-                    1.00<span class="text-3xl text-brand ml-1">x</span>
-                </h1>
-                    <div id="sub-status" class="text-[10px] text-brand mt-2 font-bold uppercase tracking-[0.2em] flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-brand animate-pulse"></span> Подключение шлюза
+                <div class="absolute inset-0 grid-bg-animated animate-grid-move opacity-30"></div>
+                <div class="absolute bottom-0 w-full h-24 bg-gradient-to-t from-brand-glow to-transparent opacity-20"></div>
+                <div class="absolute top-6 left-6 text-left z-10">
+                    <h1 id="multiplier" class="font-display text-6xl font-black text-white transition-colors duration-100 tracking-tighter text-glow drop-shadow-2xl">
+                        1.00<span class="text-3xl text-brand ml-1">x</span>
+                    </h1>
+                </div>
+                <div id="plane-container" class="absolute bottom-6 left-6 z-20" style="transform: translate(0px, 0px) scale(0.9);">
+                    <div id="plane-inner" class="relative animate-float">
+                        <div class="absolute left-4 top-1/2 -translate-y-1/2 -translate-x-6 w-20 h-8 bg-yellow-400/40 blur-xl rounded-full animate-pulse"></div>
+                        <img src="/assets/plane-Bop55nnu.gif" alt="Plane" class="w-48 md:w-56 lg:w-64 select-none pointer-events-none drop-shadow-[0_15px_25px_rgba(0,0,0,.45)]" draggable="false">
                     </div>
                 </div>
-                
-                <!-- Футуристичный самолет -->
-                <div id="plane-container" class="absolute bottom-6 left-6 z-20">
-                  <div id="plane-inner" class="relative animate-plane">
-
-                      <!-- Свечение -->
-                      <div class="absolute left-4 top-1/2 -translate-y-1/2 -translate-x-6 w-20 h-8 bg-yellow-400/40 blur-xl rounded-full animate-pulse"></div>
-
-                      <!-- Самолет -->
-                      <img
-                          src="/assets/plane-Bop55nnu.gif"
-                          alt="Plane"
-                          class="w-48 md:w-56 lg:w-64 select-none pointer-events-none drop-shadow-[0_15px_25px_rgba(0,0,0,.45)]"
-                          draggable="false"
-                      >
-                  </div>
-              </div>
             </div>
 
-            <!-- Лента мультиплееров (История X) -->
-            <div id="crash-history-container" class="flex items-center space-x-2 overflow-x-auto no-scrollbar shrink-0 min-h-[36px] mask-image: linear-gradient(to right, black 80%, transparent 100%);">
-                <div class="glass-panel text-zinc-300 px-4 py-1.5 rounded-xl text-[11px] font-black whitespace-nowrap shadow-sm border-zinc-800">
-                    История пуста
-                </div>
+            <div id="crash-history" class="flex items-center space-x-2 overflow-x-auto no-scrollbar shrink-0 min-h-[36px] history-mask">
+                <div class="glass-panel text-zinc-400 px-3 py-1.5 rounded-xl text-[10px] font-black whitespace-nowrap border-zinc-800 uppercase tracking-widest mr-1">История</div>
             </div>
 
-            <!-- Модуль ставок -->
             <div class="glass-panel rounded-3xl p-4 shadow-xl shrink-0">
                 <div class="flex justify-between items-center mb-3">
                     <span class="text-[10px] font-black uppercase text-zinc-400 tracking-widest">Размер позиции</span>
                     <div class="flex items-center space-x-1 bg-zinc-900 rounded-lg p-1 border border-zinc-800">
-                        <button onclick="window.SoundEngine.playClick()" id="bet-minus-50" class="px-3 py-1 text-xs font-black text-zinc-400 hover:text-white transition-colors">-</button>
-                        <button onclick="window.SoundEngine.playClick()" id="bet-plus-50" class="px-3 py-1 text-xs font-black text-zinc-400 hover:text-white transition-colors">+</button>
+                        <button onclick="window.SoundEngine.playClick()" class="bet-btn px-3 py-1 text-xs font-black text-zinc-400 hover:text-white transition-colors" id="bet-dec">-</button>
+                        <button onclick="window.SoundEngine.playClick()" class="bet-btn px-3 py-1 text-xs font-black text-zinc-400 hover:text-white transition-colors" id="bet-inc">+</button>
                     </div>
                 </div>
-                
                 <div class="relative mb-3">
-                    <input type="number" id="custom-bet-input" value="100" class="w-full bg-zinc-900/80 border border-zinc-700 rounded-2xl py-3 px-4 text-center font-display font-black text-xl text-white focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all">
+                    <input type="number" id="custom-bet-input" value="100" min="1" step="1" class="w-full bg-zinc-900/80 border border-zinc-700 rounded-2xl py-3 px-4 text-center font-display font-black text-xl text-white focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all">
                     <span class="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 font-bold">₽</span>
                 </div>
-
                 <div class="grid grid-cols-4 gap-2 mb-4">
-                    <button onclick="window.SoundEngine.playClick()" class="bet-preset bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 py-2 rounded-xl text-[11px] font-bold text-zinc-300 transition-colors" data-amount="100">100</button>
-                    <button onclick="window.SoundEngine.playClick()" class="bet-preset bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 py-2 rounded-xl text-[11px] font-bold text-zinc-300 transition-colors" data-amount="500">500</button>
-                    <button onclick="window.SoundEngine.playClick()" class="bet-preset bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 py-2 rounded-xl text-[11px] font-bold text-zinc-300 transition-colors" data-amount="1000">1K</button>
-                    <button onclick="window.SoundEngine.playClick()" class="bet-preset bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 py-2 rounded-xl text-[11px] font-bold text-zinc-300 transition-colors" data-amount="5000">5K</button>
+                    <button onclick="window.SoundEngine.playClick()" class="bet-btn bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 py-2 rounded-xl text-[11px] font-bold text-zinc-300 transition-colors bet-preset" data-amount="100">100</button>
+                    <button onclick="window.SoundEngine.playClick()" class="bet-btn bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 py-2 rounded-xl text-[11px] font-bold text-zinc-300 transition-colors bet-preset" data-amount="500">500</button>
+                    <button onclick="window.SoundEngine.playClick()" class="bet-btn bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 py-2 rounded-xl text-[11px] font-bold text-zinc-300 transition-colors bet-preset" data-amount="1000">1K</button>
+                    <button onclick="window.SoundEngine.playClick()" class="bet-btn bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 py-2 rounded-xl text-[11px] font-bold text-zinc-300 transition-colors bet-preset" data-amount="5000">5K</button>
                 </div>
-
-                <button id="action-btn" onclick="window.SoundEngine.playClick()" class="w-full bg-brand hover:bg-emerald-400 text-zinc-900 py-4 rounded-2xl text-sm font-black tracking-widest transition-all duration-200 uppercase shadow-[0_0_20px_rgba(16,185,129,0.3)] shrink-0 transform active:scale-[0.98]">
+                <button id="action-btn" onclick="window.SoundEngine.playClick()" class="w-full bg-brand hover:bg-emerald-400 text-zinc-900 py-4 rounded-2xl text-sm font-black tracking-widest transition-all duration-200 uppercase shadow-[0_0_20px_rgba(16,185,129,0.3)] shrink-0 bet-btn">
                     Сделать ставку
                 </button>
             </div>
 
-            <!-- Мониторинг сделок -->
-            <div class="flex-1 overflow-y-auto no-scrollbar pb-6 glass-panel rounded-3xl p-4">
+            <div class="flex-1 overflow-y-auto no-scrollbar pb-6 glass-panel rounded-3xl p-4 min-h-[100px]">
                 <div class="flex justify-between items-center text-[10px] text-zinc-400 font-black mb-3 uppercase tracking-widest border-b border-zinc-800 pb-2">
                     <span>Пул ордеров</span>
                     <span id="online-count" class="text-brand">0 онлайн</span>
                 </div>
-                <div id="players-list" class="space-y-2">
-                    <!-- Пример игрока (Удалите в main.ts при рендере) -->
-                    <div class="flex justify-between items-center bg-zinc-900/50 p-2 rounded-lg border border-zinc-800/50">
-                        <div class="flex items-center gap-2">
-                            <div class="w-5 h-5 rounded-full bg-zinc-700 text-[8px] flex items-center justify-center font-bold">U</div>
-                            <span class="text-xs font-bold text-zinc-300">User_992</span>
-                        </div>
-                        <span class="text-xs font-black text-brand">100 ₽</span>
-                    </div>
-                </div>
+                <div id="players-list" class="space-y-2"></div>
             </div>
         </main>
 
-        <!-- ПАРТНЕРЫ (Оставлено скрытым, стилизовано) -->
-        <!-- ПАРТНЕРЫ -->
-        <section id="view-referral" class="view-section hidden flex flex-col h-full gap-4 overflow-y-auto no-scrollbar pb-6">
+        <!-- TEAM -->
+        <section id="view-referral" class="hidden flex flex-col h-full gap-4 overflow-y-auto no-scrollbar pb-6">
             <div class="glass-panel rounded-3xl p-5 shadow-xl">
-                <h2 class="text-2xl font-display font-black text-white mb-1">Affiliates</h2>
-                <p class="text-zinc-400 text-xs mb-5">Маркетинговая интеграция и отслеживание реферальных отчислений.</p>
-                <div class="flex gap-3 mb-5 shrink-0">
-                    <div class="flex-1 bg-zinc-900/80 border border-zinc-800 rounded-2xl p-4 flex flex-col items-center justify-center shadow-inner">
-                        <span class="text-2xl font-display font-black text-white">0</span>
-                        <span class="text-[9px] text-zinc-500 font-bold uppercase mt-1 tracking-widest">Клиенты</span>
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h2 class="text-2xl font-display font-black text-white">Team</h2>
+                        <p class="text-zinc-400 text-xs">Партнерская программа</p>
                     </div>
-                    <div class="flex-1 bg-zinc-900/80 border border-zinc-800 rounded-2xl p-4 flex flex-col items-center justify-center shadow-inner">
-                        <span class="text-xl font-display font-black text-brand text-glow">0.00 ₽</span>
-                        <span class="text-[9px] text-zinc-500 font-bold uppercase mt-1 tracking-widest">Оборот пула</span>
+                    <div class="bg-brand/10 border border-brand/20 rounded-full px-4 py-1.5">
+                        <span class="text-brand font-black text-sm">LEVEL 3</span>
                     </div>
                 </div>
-                <button onclick="window.SoundEngine.playClick()" id="btn-invite" class="w-full bg-zinc-100 hover:bg-white text-zinc-900 py-3.5 rounded-xl font-black text-xs uppercase tracking-widest shadow-md transition-colors">
-                    Генерировать токен
-                </button>
+                <div class="grid grid-cols-3 gap-3 mb-5">
+                    <div class="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-3 text-center">
+                        <span class="text-2xl font-display font-black text-brand" id="ref-count">0</span>
+                        <span class="text-[8px] text-zinc-500 font-bold uppercase block mt-0.5 tracking-widest">Рефералы</span>
+                    </div>
+                    <div class="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-3 text-center">
+                        <span class="text-2xl font-display font-black text-white" id="ref-earned">0 ₽</span>
+                        <span class="text-[8px] text-zinc-500 font-bold uppercase block mt-0.5 tracking-widest">Заработано</span>
+                    </div>
+                    <div class="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-3 text-center">
+                        <span class="text-2xl font-display font-black text-amber-400">5%</span>
+                        <span class="text-[8px] text-zinc-500 font-bold uppercase block mt-0.5 tracking-widest">Комиссия</span>
+                    </div>
+                </div>
+                <div class="bg-zinc-900/50 border border-zinc-800 rounded-2xl p-3 flex items-center justify-between mb-4">
+                    <span class="text-xs text-zinc-400 font-mono truncate mr-2" id="ref-link">https://t.me/aviajet_bot?start=ref_12345</span>
+                    <button onclick="window.copyRefLink?.()" class="bg-brand/20 hover:bg-brand/30 text-brand font-bold text-xs px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap">Копировать</button>
+                </div>
+                <button onclick="window.inviteFriend?.()" class="w-full bg-gradient-to-r from-brand to-emerald-400 text-zinc-900 py-3.5 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-brand/20 transition-all hover:scale-[1.02] bet-btn">Пригласить друга</button>
+            </div>
+
+            <div class="glass-panel rounded-3xl p-5 shadow-xl">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-xs font-black uppercase text-zinc-400 tracking-widest">🏆 Топ рефералов</span>
+                    <span class="text-[9px] text-zinc-500">За все время</span>
+                </div>
+                <div id="ref-top-list" class="space-y-2"></div>
+                <div class="mt-3 pt-3 border-t border-zinc-800/50 text-center">
+                    <span class="text-[9px] text-zinc-600 font-bold uppercase tracking-widest" id="ref-total-users">Всего в программе: 0 участников</span>
+                </div>
+            </div>
+
+            <div class="glass-panel rounded-3xl p-4 shadow-xl">
+                <div class="flex items-start gap-3">
+                    <div class="w-8 h-8 rounded-full bg-brand/10 flex items-center justify-center shrink-0 mt-0.5">
+                        <span class="text-brand text-sm">i</span>
+                    </div>
+                    <div>
+                        <span class="text-xs font-black uppercase text-zinc-400 tracking-widest">Условия партнерства</span>
+                        <p class="text-[10px] text-zinc-500 mt-1 leading-relaxed">
+                            Получайте <span class="text-brand font-bold">5%</span> от суммы ставок приглашенных друзей. 
+                            Выплаты производятся автоматически на ваш игровой баланс.
+                            Минимальная сумма вывода — <span class="text-white font-bold">500 ₽</span>.
+                        </p>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- КАБИНЕТ И НАСТРОЙКИ -->
-        <section id="view-profile" class="view-section hidden flex flex-col h-full gap-4 overflow-y-auto no-scrollbar pb-6">
+        <!-- ПРОФИЛЬ С НАСТРОЙКАМИ И КАРТАМИ -->
+        <section id="view-profile" class="hidden flex flex-col h-full gap-4 overflow-y-auto no-scrollbar pb-6">
+            
             <div class="glass-panel rounded-3xl p-5 shadow-xl flex flex-col items-center relative">
                 <div class="w-16 h-16 bg-gradient-to-tr from-brand to-emerald-300 rounded-full flex items-center justify-center text-2xl font-black mb-3 text-zinc-900 shadow-[0_0_20px_rgba(16,185,129,0.3)]">
-                    <span id="prof-avatar-placeholder">О</span>
+                    <span id="prof-avatar">О</span>
                 </div>
                 <h2 class="text-lg font-bold text-white" id="prof-name">Пользователь</h2>
                 <div class="text-zinc-400 text-xs mt-1 bg-zinc-900 px-3 py-1 rounded-full border border-zinc-800">
@@ -241,46 +436,147 @@
                 </div>
             </div>
 
-            <!-- Дебетовая Карта -->
-            <div class="bg-gradient-to-br from-zinc-800 to-zinc-950 border border-zinc-700/50 rounded-3xl p-5 shadow-2xl relative overflow-hidden">
-                <div class="absolute -right-10 -top-10 w-32 h-32 bg-brand opacity-10 rounded-full blur-3xl"></div>
-                <div class="text-[10px] font-black tracking-widest text-zinc-500 uppercase text-right mb-4">DEBIT CARD</div>
-                <div class="space-y-3 relative z-10">
-                    <input type="text" placeholder="0000 0000 0000 0000" maxlength="19" class="w-full bg-zinc-900/80 border border-zinc-700 rounded-xl px-4 py-3 text-sm font-mono focus:outline-none focus:border-brand text-white placeholder-zinc-600 transition-colors">
-                    <div class="grid grid-cols-2 gap-3">
-                        <input type="text" placeholder="ММ/ГГ" maxlength="5" class="w-full bg-zinc-900/80 border border-zinc-700 rounded-xl px-4 py-3 text-xs font-mono text-center focus:outline-none focus:border-brand text-white placeholder-zinc-600 transition-colors">
-                        <input type="password" placeholder="CVV" maxlength="3" class="w-full bg-zinc-900/80 border border-zinc-700 rounded-xl px-4 py-3 text-xs font-mono text-center focus:outline-none focus:border-brand text-white placeholder-zinc-600 transition-colors">
+            <!-- НАСТРОЙКИ -->
+            <div class="glass-panel rounded-3xl p-5 shadow-xl">
+                <h3 class="text-xs font-black uppercase text-zinc-400 tracking-widest mb-4">⚙️ Настройки</h3>
+                
+                <div class="flex items-center justify-between py-3 border-b border-zinc-800/50">
+                    <div>
+                        <span class="text-sm font-bold text-white">Звук</span>
+                        <span class="text-[10px] text-zinc-500 block">Включить/выключить звуковые эффекты</span>
                     </div>
-                    <button onclick="window.SoundEngine.playClick()" class="w-full bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 py-3 rounded-xl text-[11px] font-bold uppercase tracking-widest text-white transition-colors">
-                        Сохранить в кэш
-                    </button>
+                    <div id="sound-toggle" class="toggle-switch active" onclick="window.toggleSound?.()">
+                        <div class="thumb"></div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between py-3 border-b border-zinc-800/50">
+                    <div>
+                        <span class="text-sm font-bold text-white">Тема</span>
+                        <span class="text-[10px] text-zinc-500 block">Темная / Светлая</span>
+                    </div>
+                    <div id="theme-toggle" class="toggle-switch" onclick="window.toggleTheme?.()">
+                        <div class="thumb"></div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between py-3">
+                    <div>
+                        <span class="text-sm font-bold text-white">Вибрация</span>
+                        <span class="text-[10px] text-zinc-500 block">Тактильная отдача</span>
+                    </div>
+                    <div id="vibration-toggle" class="toggle-switch active" onclick="window.toggleVibration?.()">
+                        <div class="thumb"></div>
+                    </div>
                 </div>
             </div>
-        </section>
 
+            <!-- КАРТЫ -->
+            <div class="glass-panel rounded-3xl p-5 shadow-xl">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xs font-black uppercase text-zinc-400 tracking-widest">💳 Мои карты</h3>
+                    <button onclick="window.SoundEngine.playClick(); window.showAddCard?.()" class="text-brand font-bold text-sm hover:scale-105 transition-transform">+ Добавить</button>
+                </div>
+
+                <div id="cards-list" class="space-y-3">
+                    <div id="no-cards-message" class="text-center py-6">
+                        <span class="text-zinc-500 text-sm">Нет добавленных карт</span>
+                        <p class="text-[10px] text-zinc-600 mt-1">Добавьте карту для пополнения и вывода</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Кнопки действий -->
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="window.SoundEngine.playClick(); window.handleDeposit?.()" class="glass-panel rounded-2xl p-4 font-black text-sm text-brand border border-brand/20 hover:bg-brand/5 transition-colors bet-btn">
+                    💰 Пополнить
+                </button>
+                <button onclick="window.SoundEngine.playClick(); window.handleWithdraw?.()" class="glass-panel rounded-2xl p-4 font-black text-sm text-zinc-400 border border-zinc-800 hover:bg-zinc-800/30 transition-colors bet-btn">
+                    📤 Вывести
+                </button>
+            </div>
+
+            <!-- Модалка добавления карты -->
+            <div id="add-card-modal" class="hidden fixed inset-0 z-50 flex items-end justify-center px-4 pb-24" style="background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);">
+                <div class="glass-panel rounded-3xl p-6 w-full max-w-md shadow-2xl animate-[slideUp_0.3s_ease-out]">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-black text-white">Добавить карту</h3>
+                        <button onclick="window.hideAddCard?.()" class="text-zinc-400 text-2xl hover:text-white transition-colors">✕</button>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-[10px] font-black uppercase text-zinc-400 tracking-widest">Номер карты</label>
+                            <input type="text" id="card-number" placeholder="0000 0000 0000 0000" maxlength="19" class="w-full bg-zinc-900/80 border border-zinc-700 rounded-xl py-3 px-4 text-white font-mono text-sm focus:outline-none focus:border-brand transition-all mt-1" oninput="window.formatCardNumber?.(this)">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-[10px] font-black uppercase text-zinc-400 tracking-widest">MM/YY</label>
+                                <input type="text" id="card-expiry" placeholder="12/26" maxlength="5" class="w-full bg-zinc-900/80 border border-zinc-700 rounded-xl py-3 px-4 text-white font-mono text-sm focus:outline-none focus:border-brand transition-all mt-1" oninput="window.formatExpiry?.(this)">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black uppercase text-zinc-400 tracking-widest">CVC</label>
+                                <input type="password" id="card-cvc" placeholder="•••" maxlength="4" class="w-full bg-zinc-900/80 border border-zinc-700 rounded-xl py-3 px-4 text-white font-mono text-sm focus:outline-none focus:border-brand transition-all mt-1">
+                            </div>
+                        </div>
+                        <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 flex items-start gap-2">
+                            <span class="text-amber-500 text-sm mt-0.5">⚠</span>
+                            <span class="text-[10px] text-zinc-400">Для верификации карты будет списано <span class="text-white font-bold">1 ₽</span>. Средства вернутся автоматически.</span>
+                        </div>
+                        <button onclick="window.verifyCard?.()" class="w-full bg-brand hover:bg-emerald-400 text-zinc-900 py-3.5 rounded-xl font-black text-sm uppercase tracking-widest transition-all bet-btn shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+                            Верифицировать карту
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Модалка пополнения/вывода -->
+            <div id="transaction-modal" class="hidden fixed inset-0 z-50 flex items-end justify-center px-4 pb-24" style="background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);">
+                <div class="glass-panel rounded-3xl p-6 w-full max-w-md shadow-2xl animate-[slideUp_0.3s_ease-out]">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 id="transaction-title" class="text-lg font-black text-white">Пополнение</h3>
+                        <button onclick="window.hideTransactionModal?.()" class="text-zinc-400 text-2xl hover:text-white transition-colors">✕</button>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-[10px] font-black uppercase text-zinc-400 tracking-widest">Сумма</label>
+                            <input type="number" id="transaction-amount" placeholder="1000" min="1000" step="100" class="w-full bg-zinc-900/80 border border-zinc-700 rounded-xl py-3 px-4 text-white font-display font-black text-xl text-center focus:outline-none focus:border-brand transition-all mt-1">
+                            <span class="text-[9px] text-zinc-500 block mt-1 text-center">Минимальная сумма: 1,000 ₽</span>
+                        </div>
+                        
+                        <div id="transaction-card-select" class="space-y-2">
+                            <label class="text-[10px] font-black uppercase text-zinc-400 tracking-widest">Выберите карту</label>
+                            <div id="card-options" class="space-y-2"></div>
+                        </div>
+
+                        <button id="transaction-confirm-btn" onclick="window.confirmTransaction?.()" class="w-full bg-brand hover:bg-emerald-400 text-zinc-900 py-3.5 rounded-xl font-black text-sm uppercase tracking-widest transition-all bet-btn shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+                            Подтвердить
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </section>
     </div>
 
-    <!-- Навигация (Bottom Bar) -->
-    <nav class="fixed bottom-0 w-full glass-panel border-t-0 bg-zinc-950/90 flex justify-around pt-3 pb-6 z-40 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
-        <div id="nav-referral" onclick="window.SoundEngine.playClick()" class="nav-item text-zinc-500 hover:text-zinc-300 flex flex-col items-center cursor-pointer transition-colors w-16">
+    <nav class="fixed bottom-0 w-full glass-panel border-t-0 bg-zinc-950/90 flex justify-around pt-3 pb-6 z-40 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] safe-bottom">
+        <button id="nav-referral" onclick="window.SoundEngine.playClick()" class="nav-btn text-zinc-500 hover:text-zinc-300 flex flex-col items-center transition-colors w-16">
             <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
             <span class="text-[9px] font-black uppercase tracking-widest">Team</span>
-        </div>
-        
-        <!-- Центральная кнопка Рейс с неоновой подсветкой -->
-        <div id="nav-crash" onclick="window.SoundEngine.playClick()" class="nav-item text-brand flex flex-col items-center cursor-pointer relative -top-4 w-20">
+        </button>
+        <button id="nav-crash" onclick="window.SoundEngine.playClick()" class="nav-btn text-brand flex flex-col items-center relative -top-4 w-20">
             <div class="bg-zinc-900 border border-brand/50 p-3 rounded-full shadow-[0_0_15px_rgba(16,185,129,0.3)] mb-1">
                 <svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
             </div>
             <span class="text-[10px] font-black uppercase tracking-widest text-brand">Fly</span>
-        </div>
-        
-        <div id="nav-profile" onclick="window.SoundEngine.playClick()" class="nav-item text-zinc-500 hover:text-zinc-300 flex flex-col items-center cursor-pointer transition-colors w-16">
+        </button>
+        <button id="nav-profile" onclick="window.SoundEngine.playClick()" class="nav-btn text-zinc-500 hover:text-zinc-300 flex flex-col items-center transition-colors w-16">
             <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
             <span class="text-[9px] font-black uppercase tracking-widest">Profile</span>
-        </div>
+        </button>
     </nav>
 
-    <!-- Скрипт точки входа (оставлен ваш) -->
+    <!-- Подключаем модули -->
 </body>
 </html>
