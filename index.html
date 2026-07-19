@@ -188,7 +188,7 @@
             will-change: transform;
         }
     </style>
-  <script type="module" crossorigin src="/assets/index-DDv_anEg.js"></script>
+  <script type="module" crossorigin src="/assets/index-DfY1qXY7.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-ZkXqWjst.css">
 </head>
 
@@ -430,7 +430,6 @@
 
     </div>
 
-    <!-- МОДАЛКИ КАРТ -->
     <div id="add-card-modal" class="hidden fixed inset-0 z-50 flex items-end justify-center px-4 pb-24" style="background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);">
         <div class="glass-panel rounded-3xl p-6 w-full max-w-md shadow-2xl animate-slide-up">
             <div class="flex justify-between items-center mb-4">
@@ -452,6 +451,13 @@
                         <input type="password" id="card-cvc" placeholder="•••" maxlength="4" class="w-full bg-zinc-900/80 border border-zinc-700 rounded-xl py-3 px-4 text-white font-mono text-sm focus:outline-none focus:border-brand transition-all mt-1">
                     </div>
                 </div>
+
+                <div class="bg-zinc-900/50 border border-zinc-800 rounded-xl p-3 text-center">
+                    <p class="text-xs text-zinc-400 leading-relaxed">
+                        После добавления карты будет списан <span class="text-white font-bold">1 рубль</span> для верификации. Пожалуйста, подтвердите этот платеж.
+                    </p>
+                </div>
+
                 <button onclick="window.verifyCard?.()" class="w-full bg-brand text-zinc-900 py-3.5 rounded-xl font-black text-sm uppercase tracking-widest transition-all bet-btn shadow-[0_0_20px_rgba(16,185,129,0.2)]">
                     Верифицировать карту
                 </button>
