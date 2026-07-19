@@ -114,7 +114,6 @@
         }
 
         #plane-container {
-            transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
             will-change: transform;
         }
 
@@ -165,8 +164,28 @@
 
         /* Логика переключения экранов */
         .view-hidden { display: none !important; }
+
+        /* Анимация падения/взрыва самолета */
+        @keyframes crash-anim {
+            0% { transform: scale(1) rotate(0deg); opacity: 1; filter: sepia(0) hue-rotate(0deg) saturate(1); }
+            30% { transform: scale(1.2) rotate(-15deg); filter: sepia(1) hue-rotate(-50deg) saturate(5) brightness(1.5); }
+            100% { transform: scale(0.5) rotate(45deg) translateY(50px) translateX(30px); opacity: 0; }
+        }
+
+        .is-crashed {
+            animation: crash-anim 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
+        }
+
+        /* Красный цвет для множителя при краше */
+        .text-crashed {
+            color: #ef4444 !important; /* Красный (Tailwind red-500) */
+            text-shadow: 0 0 20px rgba(239, 68, 68, 0.6) !important;
+        }
+        .text-crashed span {
+            color: #ef4444 !important;
+        }
     </style>
-  <script type="module" crossorigin src="/assets/index-CTYluj-9.js"></script>
+  <script type="module" crossorigin src="/assets/index-B3qVKUPn.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-ZkXqWjst.css">
 </head>
 
