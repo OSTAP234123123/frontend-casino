@@ -7,12 +7,14 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>AviaJet Terminal</title>
     
+    <!-- External Scripts & Fonts -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Tailwind Configuration -->
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -29,8 +31,7 @@
                     },
                     animation: {
                         'float': 'float 3s ease-in-out infinite',
-                        'grid-move': 'grid-move 2s linear infinite',
-                        'turbulence': 'turbulence 2.5s ease-in-out infinite'
+                        'grid-move': 'grid-move 2s linear infinite'
                     },
                     keyframes: {
                         float: {
@@ -47,6 +48,7 @@
         }
     </script>
     
+    <!-- Custom Styles -->
     <style>
         :root {
             --brand: #10b981;
@@ -80,15 +82,6 @@
             transition: background 0.3s, color 0.3s;
             margin: 0;
             padding: 0;
-        }
-
-        body {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            overflow: hidden;
             touch-action: manipulation;
         }
 
@@ -118,6 +111,7 @@
         }
 
         .pulse-dot { animation: pulse 1.5s ease-in-out infinite; }
+        
         @keyframes pulse {
             0%, 100% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.5; transform: scale(0.8); }
@@ -150,6 +144,7 @@
         }
         .toggle-switch.active .thumb { transform: translateX(20px); }
 
+        /* Light Theme Adjustments */
         .light .glass-panel { border-color: rgba(0,0,0,0.08); }
         .light .bg-zinc-900 { background: #e4e4e7; }
         .light .bg-zinc-800 { background: #d4d4d8; }
@@ -231,36 +226,54 @@
             flex-direction: column;
         }
     </style>
-  <script type="module" crossorigin src="/assets/index-DvR80kOp.js"></script>
+  <script type="module" crossorigin src="/assets/index-DgZ8YAbw.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-ZkXqWjst.css">
 </head>
 
 <body>
     <div class="flex-container w-full">
 
-        <!-- ХЕДЕР -->
+        <!-- HEADER -->
         <header class="shrink-0 flex justify-between items-center px-4 pt-5 pb-3 z-20">
-            <div class="glass-panel rounded-full flex items-center space-x-3 pl-1.5 pr-4 py-1.5 shadow-lg">
-                <div id="user-avatar" class="w-8 h-8 bg-gradient-to-tr from-brand to-emerald-300 rounded-full flex items-center justify-center font-bold text-sm text-zinc-900">О</div>
-                <span id="username" class="font-bold text-sm text-zinc-100">Игрок</span>
-            </div>
+            <!-- ЛЕВАЯ ЧАСТЬ: Аватар и статус терминала -->
             <div class="flex items-center gap-3">
-                <div id="status-indicator" class="glass-panel rounded-full px-3 py-1.5 flex items-center gap-2 border border-zinc-800/50">
-                    <span id="status-dot" class="w-2 h-2 rounded-full bg-brand pulse-dot"></span>
-                    <span id="status-text-short" class="text-[9px] font-black uppercase tracking-widest text-zinc-300">WAITING</span>
+                <div id="user-avatar" class="w-10 h-10 bg-gradient-to-tr from-brand to-emerald-300 rounded-full flex items-center justify-center font-bold text-base text-zinc-900 overflow-hidden bg-cover bg-center shadow-md border border-white/5">
+                    <span id="user-avatar-initial">О</span>
                 </div>
-                <div class="glass-panel rounded-full flex items-center space-x-2 pl-4 pr-1.5 py-1.5">
-                    <span id="balance" class="font-display font-black text-lg tracking-wide text-white">0.00</span>
-                    <span class="text-brand font-bold text-sm pr-2">₽</span>
-                    <button onclick="window.SoundEngine.playClick(); window.handleDeposit?.()" class="w-8 h-8 bg-brand text-zinc-900 rounded-full flex items-center justify-center font-black text-xl hover:scale-105 active:scale-95 transition-transform shadow-[0_0_15px_rgba(16,185,129,0.4)]">+</button>
+                
+                <div id="status-indicator" class="glass-panel rounded-2xl px-3.5 py-2 flex items-center gap-2.5 border border-zinc-800/60 shadow-[0_4px_15px_rgba(0,0,0,0.2)]">
+                    <span class="relative flex h-2.5 w-2.5">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand opacity-75"></span>
+                        <span id="status-dot" class="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand"></span>
+                    </span>
+                    <div class="flex flex-col text-left leading-none">
+                        <span class="text-[6px] font-bold text-zinc-500 uppercase tracking-widest">Самолет</span>
+                        <span id="status-text-short" class="text-[11px] font-black uppercase tracking-wider text-white mt-0.5">Ожидание</span>
+                    </div>
                 </div>
+            </div>
+
+            <!-- ПРАВАЯ ЧАСТЬ: Баланс -->
+            <div class="glass-panel rounded-2xl flex items-center space-x-2.5 pl-4 pr-2 py-2 shadow-lg border border-zinc-800/40 h-full">
+                <div class="flex flex-col text-right leading-none">
+                    <span class="text-[7px] font-bold text-zinc-500 uppercase tracking-widest">Доступно</span>
+                    <div class="flex items-baseline gap-0.5 mt-0.5">
+                        <span id="balance" class="font-display font-black text-xl tracking-wide text-white">0.00</span>
+                        <span class="text-brand font-bold text-xs">₽</span>
+                    </div>
+                </div>
+                <button onclick="window.SoundEngine.playClick(); window.handleDeposit?.()" class="w-8 h-8 bg-brand hover:bg-emerald-400 text-zinc-900 rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-[0_0_15px_rgba(16,185,129,0.4)] bet-btn">
+                    <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+                    </svg>
+                </button>
             </div>
         </header>
 
-        <!-- ОСНОВНОЙ КОНТЕНТ -->
+        <!-- MAIN CONTENT -->
         <div class="flex-auto relative w-full overflow-hidden">
             
-            <!-- ЭКРАН ИГРЫ -->
+            <!-- VIEW: CRASH -->
             <main id="view-crash" class="absolute inset-0 w-full h-full overflow-y-auto no-scrollbar flex flex-col px-4 pb-[110px] gap-4">
                 <div id="game-screen" class="shrink-0 w-full h-56 bg-zinc-900 rounded-3xl relative overflow-hidden flex items-center justify-center border border-zinc-800 shadow-2xl mt-1">
                     <div class="absolute inset-0 grid-bg-animated animate-grid-move opacity-30"></div>
@@ -273,11 +286,13 @@
                         <div class="speed-streak w-56 h-[2px] top-[80%] opacity-50" style="animation-duration: 0.9s; animation-delay: 0.7s;"></div>
                         <div class="speed-streak w-16 h-[1px] top-[30%]" style="animation-duration: 1.3s; animation-delay: 0.5s;"></div>
                     </div>
+                    
                     <div class="absolute top-6 left-6 text-left z-10">
                         <h1 id="multiplier" class="font-display text-6xl font-black text-white tracking-tighter text-glow">
                             1.00<span class="text-3xl text-brand ml-1">x</span>
                         </h1>
                     </div>
+                    
                     <div id="plane-container" class="absolute bottom-6 left-6 z-20" style="transform: translate(0px, 0px) scale(0.9);">
                         <div id="plane-inner" class="relative animate-float">
                             <div class="absolute left-4 top-1/2 -translate-y-1/2 -translate-x-6 w-20 h-8 bg-yellow-400/40 blur-xl rounded-full animate-pulse"></div>
@@ -290,24 +305,30 @@
                     <div class="glass-panel text-zinc-400 px-3 py-1.5 rounded-xl text-[10px] font-black whitespace-nowrap border-zinc-800 uppercase tracking-widest mr-1">История</div>
                 </div>
 
+                <!-- ОБНОВЛЕННЫЙ БЛОК СТАВКИ -->
                 <div class="shrink-0 glass-panel rounded-3xl p-4 shadow-xl">
-                    <div class="flex justify-between items-center mb-3">
+                    <div class="flex justify-between items-center mb-2">
                         <span class="text-[10px] font-black uppercase text-zinc-400 tracking-widest">Размер позиции</span>
-                        <div class="flex items-center space-x-1 bg-zinc-900 rounded-lg p-1 border border-zinc-800">
-                            <button onclick="window.SoundEngine.playClick()" class="bet-btn px-3 py-1 text-xs font-black text-zinc-400 hover:text-white" id="bet-dec">-</button>
-                            <button onclick="window.SoundEngine.playClick()" class="bet-btn px-3 py-1 text-xs font-black text-zinc-400 hover:text-white" id="bet-inc">+</button>
+                    </div>
+                    
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="relative flex-1">
+                            <input type="number" id="custom-bet-input" value="100" min="10" class="w-full bg-zinc-900/80 border border-zinc-700 rounded-2xl py-3 pl-4 pr-10 text-left font-display font-black text-xl text-white focus:outline-none focus:border-brand transition-colors">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 font-bold">₽</span>
+                        </div>
+                        <div class="flex gap-1.5 shrink-0">
+                            <button onclick="window.updateBetAmount('/2'); window.SoundEngine.playClick()" class="bet-btn bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-xl px-3.5 py-3 text-xs font-black text-zinc-300 transition-colors">/2</button>
+                            <button onclick="window.updateBetAmount('x2'); window.SoundEngine.playClick()" class="bet-btn bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-xl px-3.5 py-3 text-xs font-black text-zinc-300 transition-colors">x2</button>
                         </div>
                     </div>
-                    <div class="relative mb-3">
-                        <input type="number" id="custom-bet-input" value="100" min="1" class="w-full bg-zinc-900/80 border border-zinc-700 rounded-2xl py-3 px-4 text-center font-display font-black text-xl text-white focus:outline-none focus:border-brand">
-                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 font-bold">₽</span>
-                    </div>
+                    
                     <div class="grid grid-cols-4 gap-2 mb-4">
-                        <button data-amount="100" onclick="window.SoundEngine.playClick()" class="bet-preset bet-btn bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 py-2 rounded-xl text-[11px] font-bold text-zinc-300">100</button>
-                        <button data-amount="500" onclick="window.SoundEngine.playClick()" class="bet-preset bet-btn bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 py-2 rounded-xl text-[11px] font-bold text-zinc-300">500</button>
-                        <button data-amount="1000" onclick="window.SoundEngine.playClick()" class="bet-preset bet-btn bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 py-2 rounded-xl text-[11px] font-bold text-zinc-300">1K</button>
-                        <button data-amount="5000" onclick="window.SoundEngine.playClick()" class="bet-preset bet-btn bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 py-2 rounded-xl text-[11px] font-bold text-zinc-300">5K</button>
+                        <button onclick="window.updateBetAmount('min'); window.SoundEngine.playClick()" class="bet-preset bet-btn bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 py-2.5 rounded-xl text-[10px] font-black text-zinc-400 uppercase tracking-wider transition-colors">Min</button>
+                        <button onclick="window.updateBetAmount('500'); window.SoundEngine.playClick()" class="bet-preset bet-btn bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 py-2.5 rounded-xl text-[12px] font-bold text-zinc-300 transition-colors">500</button>
+                        <button onclick="window.updateBetAmount('1000'); window.SoundEngine.playClick()" class="bet-preset bet-btn bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 py-2.5 rounded-xl text-[12px] font-bold text-zinc-300 transition-colors">1K</button>
+                        <button onclick="window.updateBetAmount('max'); window.SoundEngine.playClick()" class="bet-preset bet-btn bg-brand/10 hover:bg-brand/20 border border-brand/30 py-2.5 rounded-xl text-[10px] font-black text-brand uppercase tracking-wider shadow-[0_0_15px_rgba(16,185,129,0.15)] transition-colors">Max</button>
                     </div>
+                    
                     <button id="action-btn" onclick="window.SoundEngine.playClick()" class="w-full bg-brand text-zinc-900 py-4 rounded-2xl text-sm font-black tracking-widest uppercase shadow-[0_0_20px_rgba(16,185,129,0.3)] bet-btn">
                         Сделать ставку
                     </button>
@@ -316,75 +337,151 @@
                 <div class="shrink-0 glass-panel rounded-3xl p-4 min-h-[200px]">
                     <div class="flex justify-between items-center text-[10px] text-zinc-400 font-black mb-3 uppercase tracking-widest border-b border-zinc-800 pb-2">
                         <span>Пул ордеров</span>
-                        <span id="online-count" class="text-brand">0 онлайн</span>
+                        <span id="online-count" class="text-brand flex items-center gap-1.5">
+                            <span class="relative flex h-2 w-2">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-brand"></span>
+                            </span>
+                            0 онлайн
+                        </span>
                     </div>
                     <div id="players-list" class="space-y-2"></div>
                 </div>
             </main>
 
-            <!-- ЭКРАН TEAM -->
+            <!-- ОБНОВЛЕННЫЙ ЭКРАН TEAM -->
             <section id="view-referral" class="view-hidden absolute inset-0 w-full h-full overflow-y-auto no-scrollbar flex flex-col px-4 pb-[110px] gap-4">
-                <div class="shrink-0 glass-panel rounded-3xl p-5 shadow-xl mt-1">
-                    <div class="flex items-center justify-between mb-4">
+                <div class="shrink-0 glass-panel rounded-3xl p-5 shadow-xl mt-1 relative overflow-hidden">
+                    <!-- Декоративный фон -->
+                    <div class="absolute -right-10 -top-10 w-32 h-32 bg-brand/20 blur-3xl rounded-full pointer-events-none"></div>
+                    
+                    <div class="flex items-center justify-between mb-4 relative z-10">
                         <div>
                             <h2 class="text-2xl font-display font-black text-white">Team</h2>
-                            <p class="text-zinc-400 text-xs">Партнерская программа</p>
+                            <p class="text-zinc-400 text-xs mt-0.5">Партнерская программа</p>
                         </div>
-                        <div class="bg-brand/10 border border-brand/20 rounded-full px-4 py-1.5">
-                            <span class="text-brand font-black text-sm">LEVEL 3</span>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-3 gap-3 mb-5">
-                        <div class="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-3 text-center">
-                            <span class="text-2xl font-display font-black text-brand" id="ref-count">0</span>
-                            <span class="text-[8px] text-zinc-500 font-bold uppercase block mt-0.5 tracking-widest">Рефералы</span>
-                        </div>
-                        <div class="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-3 text-center">
-                            <span class="text-2xl font-display font-black text-white" id="ref-earned">0 ₽</span>
-                            <span class="text-[8px] text-zinc-500 font-bold uppercase block mt-0.5 tracking-widest">Заработано</span>
-                        </div>
-                        <div class="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-3 text-center">
-                            <span class="text-2xl font-display font-black text-amber-400">5%</span>
-                            <span class="text-[8px] text-zinc-500 font-bold uppercase block mt-0.5 tracking-widest">Комиссия</span>
+                        <div class="flex flex-col items-end">
+                            <div class="bg-brand/10 border border-brand/30 rounded-xl px-3 py-1.5 flex items-center gap-1.5 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
+                                <svg class="w-3.5 h-3.5 text-brand" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                                <span class="text-brand font-black text-xs">LEVEL 3</span>
+                            </div>
+                            <span class="text-[9px] text-zinc-500 mt-1.5 font-bold">До 4 лвл: 15 инвайтов</span>
                         </div>
                     </div>
-                    <div class="bg-zinc-900/50 border border-zinc-800 rounded-2xl p-3 flex items-center justify-between mb-4">
+
+                    <!-- Progress Bar -->
+                    <div class="w-full bg-zinc-900/80 rounded-full h-1.5 mb-5 relative z-10 border border-zinc-800">
+                        <div class="bg-gradient-to-r from-brand to-emerald-300 h-full rounded-full shadow-[0_0_10px_rgba(16,185,129,0.5)]" style="width: 65%"></div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3 mb-4 relative z-10">
+                        <!-- Карточка Рефералов -->
+                        <div class="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-3 flex flex-col justify-center relative overflow-hidden">
+                            <div class="absolute right-[-10px] bottom-[-10px] opacity-5">
+                                <svg class="w-20 h-20 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                            </div>
+                            <span class="text-[9px] text-zinc-500 font-bold uppercase tracking-widest mb-1 z-10">Ваша сеть</span>
+                            <div class="flex items-end gap-2 z-10">
+                                <span class="text-3xl font-display font-black text-white leading-none" id="ref-count">12</span>
+                                <span class="text-[10px] text-brand font-bold mb-1 bg-brand/10 px-1.5 py-0.5 rounded">+3 за день</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Карточка Дохода -->
+                        <div class="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-3 flex flex-col justify-center relative overflow-hidden">
+                            <div class="absolute right-[-10px] bottom-[-10px] opacity-10">
+                                <svg class="w-20 h-20 text-brand" fill="currentColor" viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+                            </div>
+                            <span class="text-[9px] text-zinc-500 font-bold uppercase tracking-widest mb-1 z-10">Доступно к выводу</span>
+                            <span class="text-2xl font-display font-black text-brand z-10" id="ref-earned">450 ₽</span>
+                            
+                            <!-- Кнопка Клейм -->
+                            <button onclick="window.SoundEngine.playClick(); window.claimRefBalance?.()" class="mt-2.5 bg-brand/20 hover:bg-brand/30 text-brand border border-brand/20 text-[10px] font-black uppercase tracking-wider py-1.5 rounded-lg transition-colors w-full text-center z-10 shadow-inner">Забрать</button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-zinc-900/50 border border-zinc-800 rounded-2xl p-3 flex items-center justify-between mb-4 relative z-10">
                         <span class="text-xs text-zinc-400 font-mono truncate mr-2" id="ref-link">https://t.me/@aviajetsbot?start=ref3453454</span>
-                        <button onclick="window.copyRefLink?.()" class="bg-brand/20 hover:bg-brand/30 text-brand font-bold text-xs px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap">Копировать</button>
+                        <button onclick="window.copyRefLink?.()" class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap">Копировать</button>
                     </div>
-                    <button onclick="window.inviteFriend?.()" class="w-full bg-gradient-to-r from-brand to-emerald-400 text-zinc-900 py-3.5 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-brand/20 transition-all bet-btn">Пригласить друга</button>
+                    
+                    <button onclick="window.inviteFriend?.()" class="relative z-10 w-full bg-gradient-to-r from-brand to-emerald-400 text-zinc-900 py-3.5 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-brand/20 transition-all bet-btn flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+                        Пригласить друга
+                    </button>
                 </div>
 
                 <div class="shrink-0 glass-panel rounded-3xl p-5 shadow-xl">
                     <div class="flex justify-between items-center mb-4">
                         <span class="text-xs font-black uppercase text-zinc-400 tracking-widest">🏆 Топ рефералов</span>
-                        <span class="text-[9px] text-zinc-500">За все время</span>
+                        <span class="text-[9px] text-zinc-500 bg-zinc-900 px-2 py-1 rounded border border-zinc-800">Комиссия 5%</span>
                     </div>
                     <div id="ref-top-list" class="space-y-2"></div>
                     <div class="mt-3 pt-3 border-t border-zinc-800/50 text-center">
-                        <span class="text-[9px] text-zinc-600 font-bold uppercase tracking-widest" id="ref-total-users">Всего в программе: 0 участников</span>
+                        <span class="text-[9px] text-zinc-600 font-bold uppercase tracking-widest" id="ref-total-users">Всего в программе: 1 245 участников</span>
                     </div>
                 </div>
             </section>
 
-            <!-- ЭКРАН ПРОФИЛЯ -->
+            <!-- VIEW: PROFILE -->
             <section id="view-profile" class="view-hidden absolute inset-0 w-full h-full overflow-y-auto no-scrollbar flex flex-col px-4 pb-[110px] gap-4">
-                <div class="shrink-0 glass-panel rounded-3xl p-5 shadow-xl flex flex-col items-center mt-1">
-                    <div class="w-16 h-16 bg-gradient-to-tr from-brand to-emerald-300 rounded-full flex items-center justify-center text-2xl font-black mb-3 text-zinc-900 shadow-[0_0_20px_rgba(16,185,129,0.3)]">
-                        <span id="prof-avatar">О</span>
+                <div class="shrink-0 glass-panel rounded-3xl p-5 shadow-xl flex flex-col items-center mt-1 relative overflow-hidden">
+                    <div id="prof-avatar" class="w-20 h-20 bg-gradient-to-tr from-brand to-emerald-300 rounded-full flex items-center justify-center text-3xl font-black mb-3 text-zinc-900 shadow-[0_0_25px_rgba(16,185,129,0.4)] border-2 border-brand/20 overflow-hidden bg-cover bg-center">
+                        <span id="prof-avatar-initial">О</span>
                     </div>
-                    <h2 class="text-lg font-bold text-white" id="prof-name">Пользователь</h2>
-                    <div class="text-zinc-400 text-xs mt-1 bg-zinc-900 px-3 py-1 rounded-full border border-zinc-800">
-                        Баланс: <span class="font-black text-sm text-brand" id="prof-balance">0.00</span> ₽
+                    <h2 class="text-xl font-black text-white tracking-tight" id="prof-name">Пользователь</h2>
+                    <div class="text-zinc-400 text-xs mt-2 bg-zinc-950/60 px-4 py-1.5 rounded-full border border-zinc-800/80 flex items-center gap-2 shadow-inner">
+                        <span class="font-bold text-zinc-500">Баланс:</span> 
+                        <span class="font-black text-base text-brand tracking-wide" id="prof-balance">0.00</span> 
+                        <span class="text-brand font-bold">₽</span>
                     </div>
                 </div>
 
+                <!-- КНОПКИ ДЕЙСТВИЯ -->
+                <div class="shrink-0 grid grid-cols-2 gap-3">
+                    <button onclick="window.SoundEngine.playClick(); window.handleDeposit?.()" class="glass-panel bg-brand/10 rounded-2xl py-4 px-3 font-black text-base text-brand border border-brand/40 shadow-[0_4px_20px_rgba(16,185,129,0.15)] active:scale-95 hover:bg-brand/20 transition-all bet-btn flex items-center justify-center gap-2.5">
+                        <svg class="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+                        </svg>
+                        Пополнить
+                    </button>
+                    <button onclick="window.SoundEngine.playClick(); window.handleWithdraw?.()" class="glass-panel bg-zinc-900/40 rounded-2xl py-4 px-3 font-black text-base text-zinc-300 border border-zinc-700/80 active:scale-95 hover:bg-zinc-800/50 transition-all bet-btn flex items-center justify-center gap-2.5">
+                        <svg class="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
+                        </svg>
+                        Вывести
+                    </button>
+                </div>
+
+                <!-- Мои карты -->
                 <div class="shrink-0 glass-panel rounded-3xl p-5 shadow-xl">
-                    <h3 class="text-xs font-black uppercase text-zinc-400 tracking-widest mb-4">Настройки</h3>
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xs font-black uppercase text-zinc-400 tracking-widest flex items-center gap-2">
+                            <svg class="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                            Мои карты
+                        </h3>
+                        <button onclick="window.SoundEngine.playClick(); window.showAddCard?.()" class="text-brand font-bold text-sm hover:scale-105 active:scale-95 transition-all flex items-center gap-1 bg-brand/10 px-2.5 py-1 rounded-lg border border-brand/20">
+                            <span>+</span> Добавить
+                        </button>
+                    </div>
+                    <div id="cards-list" class="space-y-3">
+                        <div id="no-cards-message" class="text-center py-6">
+                            <span class="text-zinc-500 text-sm block font-medium">Нет добавленных карт</span>
+                            <p class="text-[10px] text-zinc-600 mt-1">Добавьте карту для мгновенного пополнения и вывода</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Настройки -->
+                <div class="shrink-0 glass-panel rounded-3xl p-5 shadow-xl">
+                    <h3 class="text-xs font-black uppercase text-zinc-400 tracking-widest mb-4 flex items-center gap-2">
+                        <svg class="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        Настройки
+                    </h3>
                     <div class="flex items-center justify-between py-3 border-b border-zinc-800/50">
                         <div>
                             <span class="text-sm font-bold text-white">Звук</span>
-                            <span class="text-[10px] text-zinc-500 block">Включить/выключить звуковые эффекты</span>
+                            <span class="text-[10px] text-zinc-500 block">Звуковые эффекты терминала</span>
                         </div>
                         <div id="sound-toggle" class="toggle-switch active" onclick="window.toggleSound?.()">
                             <div class="thumb"></div>
@@ -393,7 +490,7 @@
                     <div class="flex items-center justify-between py-3 border-b border-zinc-800/50">
                         <div>
                             <span class="text-sm font-bold text-white">Тема</span>
-                            <span class="text-[10px] text-zinc-500 block">Темная / Светлая</span>
+                            <span class="text-[10px] text-zinc-500 block">Переключение режима интерфейса</span>
                         </div>
                         <div id="theme-toggle" class="toggle-switch" onclick="window.toggleTheme?.()">
                             <div class="thumb"></div>
@@ -402,37 +499,14 @@
                     <div class="flex items-center justify-between py-3">
                         <div>
                             <span class="text-sm font-bold text-white">Вибрация</span>
-                            <span class="text-[10px] text-zinc-500 block">Тактильная отдача</span>
+                            <span class="text-[10px] text-zinc-500 block">Тактильный Haptic Feedback</span>
                         </div>
                         <div id="vibration-toggle" class="toggle-switch active" onclick="window.toggleVibration?.()">
                             <div class="thumb"></div>
                         </div>
                     </div>
                 </div>
-
-                <div class="shrink-0 glass-panel rounded-3xl p-5 shadow-xl">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xs font-black uppercase text-zinc-400 tracking-widest">Мои карты</h3>
-                        <button onclick="window.SoundEngine.playClick(); window.showAddCard?.()" class="text-brand font-bold text-sm hover:scale-105 transition-transform">+ Добавить</button>
-                    </div>
-                    <div id="cards-list" class="space-y-3">
-                        <div id="no-cards-message" class="text-center py-6">
-                            <span class="text-zinc-500 text-sm">Нет добавленных карт</span>
-                            <p class="text-[10px] text-zinc-600 mt-1">Добавьте карту для пополнения и вывода</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="shrink-0 grid grid-cols-2 gap-3">
-                    <button onclick="window.SoundEngine.playClick(); window.handleDeposit?.()" class="glass-panel rounded-2xl p-4 font-black text-sm text-brand border border-brand/20 hover:bg-brand/5 transition-colors bet-btn">
-                        Пополнить
-                    </button>
-                    <button onclick="window.SoundEngine.playClick(); window.handleWithdraw?.()" class="glass-panel rounded-2xl p-4 font-black text-sm text-zinc-400 border border-zinc-800 hover:bg-zinc-800/30 transition-colors bet-btn">
-                        Вывести
-                    </button>
-                </div>
             </section>
-
         </div>
 
         <!-- НИЖНЯЯ НАВИГАЦИЯ -->
@@ -457,52 +531,48 @@
 
     </div>
 
-    <!-- МОДАЛКА ДОБАВЛЕНИЯ КАРТЫ -->
-    <!-- МОДАЛКА ДОБАВЛЕНИЯ КАРТЫ - ИСПРАВЛЕННАЯ -->
-<div id="add-card-modal" class="hidden modal-overlay" style="align-items: center; padding: 1rem;">
-    <div class="glass-panel rounded-3xl p-6 w-full max-w-md shadow-2xl animate-slide-up" style="max-height: 90vh; overflow-y: auto;">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg font-black text-white">Добавить карту</h3>
-            <button onclick="window.hideAddCard?.()" class="text-zinc-400 text-2xl hover:text-white transition-colors">✕</button>
-        </div>
-        <div class="space-y-4">
-            <div>
-                <label class="text-[10px] font-black uppercase text-zinc-400 tracking-widest">Номер карты</label>
-                <input type="text" id="card-number" placeholder="0000 0000 0000 0000" maxlength="19" 
-                    class="w-full bg-zinc-900/80 border border-zinc-700 rounded-xl py-3 px-4 text-white font-mono text-sm focus:outline-none focus:border-brand transition-all mt-1" 
-                    oninput="window.formatCardNumber?.(this)"
-                    autocomplete="off">
+    <!-- МОДАЛКИ (Без изменений, чтобы не сломать) -->
+    <div id="add-card-modal" class="hidden modal-overlay" style="align-items: center; padding: 1rem;">
+        <div class="glass-panel rounded-3xl p-6 w-full max-w-md shadow-2xl animate-slide-up" style="max-height: 90vh; overflow-y: auto;">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-black text-white">Добавить карту</h3>
+                <button onclick="window.hideAddCard?.()" class="text-zinc-400 text-2xl hover:text-white transition-colors">✕</button>
             </div>
-            <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-4">
                 <div>
-                    <label class="text-[10px] font-black uppercase text-zinc-400 tracking-widest">MM/YY</label>
-                    <input type="text" id="card-expiry" placeholder="12/26" maxlength="5" 
+                    <label class="text-[10px] font-black uppercase text-zinc-400 tracking-widest">Номер карты</label>
+                    <input type="text" id="card-number" placeholder="0000 0000 0000 0000" maxlength="19" 
                         class="w-full bg-zinc-900/80 border border-zinc-700 rounded-xl py-3 px-4 text-white font-mono text-sm focus:outline-none focus:border-brand transition-all mt-1" 
-                        oninput="window.formatExpiry?.(this)"
+                        oninput="window.formatCardNumber?.(this)"
                         autocomplete="off">
                 </div>
-                <div>
-                    <label class="text-[10px] font-black uppercase text-zinc-400 tracking-widest">CVC</label>
-                    <input type="password" id="card-cvc" placeholder="•••" maxlength="4" 
-                        class="w-full bg-zinc-900/80 border border-zinc-700 rounded-xl py-3 px-4 text-white font-mono text-sm focus:outline-none focus:border-brand transition-all mt-1"
-                        autocomplete="off">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[10px] font-black uppercase text-zinc-400 tracking-widest">MM/YY</label>
+                        <input type="text" id="card-expiry" placeholder="12/26" maxlength="5" 
+                            class="w-full bg-zinc-900/80 border border-zinc-700 rounded-xl py-3 px-4 text-white font-mono text-sm focus:outline-none focus:border-brand transition-all mt-1" 
+                            oninput="window.formatExpiry?.(this)"
+                            autocomplete="off">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black uppercase text-zinc-400 tracking-widest">CVC</label>
+                        <input type="password" id="card-cvc" placeholder="•••" maxlength="4" 
+                            class="w-full bg-zinc-900/80 border border-zinc-700 rounded-xl py-3 px-4 text-white font-mono text-sm focus:outline-none focus:border-brand transition-all mt-1"
+                            autocomplete="off">
+                    </div>
                 </div>
+                <div class="bg-zinc-900/50 border border-zinc-800 rounded-xl p-3 text-center">
+                    <p class="text-xs text-zinc-400 leading-relaxed">
+                        После добавления карты будет списан <span class="text-white font-bold">1 рубль</span> для верификации. Пожалуйста, подтвердите этот платеж.
+                    </p>
+                </div>
+                <button onclick="window.verifyCard?.()" class="w-full bg-brand text-zinc-900 py-3.5 rounded-xl font-black text-sm uppercase tracking-widest transition-all bet-btn shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+                    Верифицировать карту
+                </button>
             </div>
-
-            <div class="bg-zinc-900/50 border border-zinc-800 rounded-xl p-3 text-center">
-                <p class="text-xs text-zinc-400 leading-relaxed">
-                    После добавления карты будет списан <span class="text-white font-bold">1 рубль</span> для верификации. Пожалуйста, подтвердите этот платеж.
-                </p>
-            </div>
-
-            <button onclick="window.verifyCard?.()" class="w-full bg-brand text-zinc-900 py-3.5 rounded-xl font-black text-sm uppercase tracking-widest transition-all bet-btn shadow-[0_0_20px_rgba(16,185,129,0.2)]">
-                Верифицировать карту
-            </button>
         </div>
     </div>
-</div>
 
-    <!-- МОДАЛКА ОПЛАТЫ -->
     <div id="transaction-modal" class="hidden modal-overlay">
         <div class="glass-panel rounded-3xl p-6 w-full max-w-md shadow-2xl animate-slide-up">
             <div class="flex justify-between items-center mb-4">
@@ -525,6 +595,7 @@
         </div>
     </div>
 
+    <!-- MAIN SCRIPTS -->
     <script>
         // Звуковой движок
         const SoundEngine = {
@@ -572,6 +643,71 @@
         document.getElementById('nav-referral').addEventListener('click', () => switchTab('view-referral', 'nav-referral'));
         document.getElementById('nav-crash').addEventListener('click', () => switchTab('view-crash', 'nav-crash'));
         document.getElementById('nav-profile').addEventListener('click', () => switchTab('view-profile', 'nav-profile'));
+
+        // НОВЫЙ СКРИПТ ДЛЯ УПРАВЛЕНИЯ СТАВКОЙ (Min/Max/x2)
+        window.updateBetAmount = function(action) {
+            const betInput = document.getElementById('custom-bet-input');
+            let currentVal = parseFloat(betInput.value) || 0;
+            const minBet = 10;
+            const maxBet = 100000; // Можешь поменять макс баланс здесь
+            
+            if (action === 'min') {
+                currentVal = minBet;
+            } else if (action === 'max') {
+                // Если баланс подключен, можно подставлять баланс. Пока ставим хардкод лимит
+                currentVal = maxBet; 
+            } else if (action === '/2') {
+                currentVal = Math.max(minBet, Math.floor(currentVal / 2));
+            } else if (action === 'x2') {
+                currentVal = Math.min(maxBet, currentVal * 2);
+            } else {
+                // Если передали конкретное число (500, 1000)
+                currentVal = parseFloat(action);
+            }
+            
+            betInput.value = currentVal;
+            // Если есть внешний обработчик в твоем TS, вызываем его событие
+            betInput.dispatchEvent(new Event('input', { bubbles: true }));
+        };
+
+        // Интеграция с Telegram WebApp
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.Telegram && window.Telegram.WebApp) {
+                const tg = window.Telegram.WebApp;
+                tg.ready();
+                tg.expand();
+
+                const user = tg.initDataUnsafe?.user;
+                if (user) {
+                    const name = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+                    
+                    const usernameEl = document.getElementById('username');
+                    const profNameEl = document.getElementById('prof-name');
+                    if (usernameEl) usernameEl.textContent = name;
+                    if (profNameEl) profNameEl.textContent = name;
+
+                    const initial = user.first_name.charAt(0).toUpperCase();
+                    const avatarInitialEl = document.getElementById('user-avatar-initial');
+                    const profAvatarInitialEl = document.getElementById('prof-avatar-initial');
+                    if (avatarInitialEl) avatarInitialEl.textContent = initial;
+                    if (profAvatarInitialEl) profAvatarInitialEl.textContent = initial;
+
+                    if (user.photo_url) {
+                        const headerAvatar = document.getElementById('user-avatar');
+                        const profileAvatar = document.getElementById('prof-avatar');
+                        
+                        if (headerAvatar) {
+                            headerAvatar.style.backgroundImage = `url('${user.photo_url}')`;
+                            if (avatarInitialEl) avatarInitialEl.style.display = 'none';
+                        }
+                        if (profileAvatar) {
+                            profileAvatar.style.backgroundImage = `url('${user.photo_url}')`;
+                            if (profAvatarInitialEl) profAvatarInitialEl.style.display = 'none';
+                        }
+                    }
+                }
+            }
+        });
 
         // Фикс клавиатуры
         (function fixKeyboard() {
@@ -627,6 +763,7 @@
         })();
     </script>
 
+    <!-- MODULES IMPORTS -->
     
 </body>
 </html>
