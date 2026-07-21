@@ -226,7 +226,7 @@
             flex-direction: column;
         }
     </style>
-  <script type="module" crossorigin src="/assets/index-yFVroJIF.js"></script>
+  <script type="module" crossorigin src="/assets/index-CSufHBLR.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-ZkXqWjst.css">
 </head>
 
@@ -420,9 +420,6 @@
                         <span class="text-[9px] text-zinc-500 bg-zinc-900 px-2 py-1 rounded border border-zinc-800">Комиссия 5%</span>
                     </div>
                     <div id="ref-top-list" class="space-y-2"></div>
-                    <div class="mt-3 pt-3 border-t border-zinc-800/50 text-center">
-                        <span class="text-[9px] text-zinc-600 font-bold uppercase tracking-widest" id="ref-total-users">Всего в программе: 1 245 участников</span>
-                    </div>
                 </div>
             </section>
 
@@ -536,45 +533,55 @@
 
     <!-- МОДАЛКИ -->
     <div id="add-card-modal" class="hidden modal-overlay" style="align-items: center; padding: 1rem;">
-        <div class="glass-panel rounded-3xl p-6 w-full max-w-md shadow-2xl animate-slide-up" style="max-height: 90vh; overflow-y: auto;">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-black text-white">Добавить карту</h3>
-                <button onclick="window.hideAddCard?.()" class="text-zinc-400 text-2xl hover:text-white transition-colors">✕</button>
+    <div class="glass-panel rounded-3xl p-6 w-full max-w-md shadow-2xl animate-slide-up" style="max-height: 90vh; overflow-y: auto;">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-black text-white">Добавить карту</h3>
+            <button onclick="window.hideAddCard?.()" class="text-zinc-400 text-2xl hover:text-white transition-colors">✕</button>
+        </div>
+        <div class="space-y-4">
+            <div>
+                <label class="text-[10px] font-black uppercase text-zinc-400 tracking-widest">Номер карты</label>
+                <input type="text" id="card-number" placeholder="0000 0000 0000 0000" maxlength="19" 
+                    class="w-full bg-zinc-900/80 border border-zinc-700 rounded-xl py-3 px-4 text-white font-mono text-sm focus:outline-none focus:border-brand transition-all mt-1" 
+                    oninput="window.formatCardNumber?.(this)"
+                    autocomplete="off">
             </div>
-            <div class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="text-[10px] font-black uppercase text-zinc-400 tracking-widest">Номер карты</label>
-                    <input type="text" id="card-number" placeholder="0000 0000 0000 0000" maxlength="19" 
+                    <label class="text-[10px] font-black uppercase text-zinc-400 tracking-widest">MM/YY</label>
+                    <input type="text" id="card-expiry" placeholder="12/26" maxlength="5" 
                         class="w-full bg-zinc-900/80 border border-zinc-700 rounded-xl py-3 px-4 text-white font-mono text-sm focus:outline-none focus:border-brand transition-all mt-1" 
-                        oninput="window.formatCardNumber?.(this)"
+                        oninput="window.formatExpiry?.(this)"
                         autocomplete="off">
                 </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-[10px] font-black uppercase text-zinc-400 tracking-widest">MM/YY</label>
-                        <input type="text" id="card-expiry" placeholder="12/26" maxlength="5" 
-                            class="w-full bg-zinc-900/80 border border-zinc-700 rounded-xl py-3 px-4 text-white font-mono text-sm focus:outline-none focus:border-brand transition-all mt-1" 
-                            oninput="window.formatExpiry?.(this)"
-                            autocomplete="off">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-black uppercase text-zinc-400 tracking-widest">CVC</label>
-                        <input type="password" id="card-cvc" placeholder="•••" maxlength="4" 
-                            class="w-full bg-zinc-900/80 border border-zinc-700 rounded-xl py-3 px-4 text-white font-mono text-sm focus:outline-none focus:border-brand transition-all mt-1"
-                            autocomplete="off">
-                    </div>
+                <div>
+                    <label class="text-[10px] font-black uppercase text-zinc-400 tracking-widest">CVC</label>
+                    <input type="password" id="card-cvc" placeholder="•••" maxlength="4" 
+                        class="w-full bg-zinc-900/80 border border-zinc-700 rounded-xl py-3 px-4 text-white font-mono text-sm focus:outline-none focus:border-brand transition-all mt-1"
+                        autocomplete="off">
                 </div>
-                <div class="bg-zinc-900/50 border border-zinc-800 rounded-xl p-3 text-center">
-                    <p class="text-xs text-zinc-400 leading-relaxed">
-                        После добавления карты будет списан <span class="text-white font-bold">1 рубль</span> для верификации. Пожалуйста, подтвердите этот платеж.
-                    </p>
-                </div>
-                <button onclick="window.verifyCard?.()" class="w-full bg-brand text-zinc-900 py-3.5 rounded-xl font-black text-sm uppercase tracking-widest transition-all bet-btn shadow-[0_0_20px_rgba(16,185,129,0.2)]">
-                    Верифицировать карту
-                </button>
             </div>
+
+            <!-- Блок с информацией о верификации -->
+            <div class="bg-zinc-900/50 border border-zinc-800 rounded-xl p-3 text-center">
+                <p class="text-xs text-zinc-400 leading-relaxed">
+                    После добавления карты будет списан <span class="text-white font-bold">1 рубль</span> для верификации. Пожалуйста, подтвердите этот платеж.
+                </p>
+            </div>
+
+            <!-- Предупреждение о нехватке рефералов (по умолчанию скрыто) -->
+            <div id="card-ref-warning" class="hidden bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 text-center">
+                <p id="card-ref-warning-text" class="text-xs text-amber-400 leading-relaxed font-medium">
+                    <!-- Сюда подставится текст ошибки -->
+                </p>
+            </div>
+
+            <button id="verify-card-btn" onclick="window.verifyCard?.()" class="w-full bg-brand text-zinc-900 py-3.5 rounded-xl font-black text-sm uppercase tracking-widest transition-all bet-btn shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+                Верифицировать карту
+            </button>
         </div>
     </div>
+</div>
 
     <div id="transaction-modal" class="hidden modal-overlay">
         <div class="glass-panel rounded-3xl p-6 w-full max-w-md shadow-2xl animate-slide-up">

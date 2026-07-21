@@ -175,9 +175,10 @@
                     <span class="w-6 h-6 rounded-full ${i?`rank-badge ${i}`:`bg-zinc-700`} flex items-center justify-center text-xs font-black ${i?``:`text-zinc-400`}">
                         ${r}
                     </span>
-                    <div>
-                        <span class="text-sm font-bold ${n>=3?`text-zinc-400`:`text-white`}">${t.name}</span>
-                        <span class="text-[9px] text-zinc-500 block">пригласил${t.name.endsWith(`а`)?`а`:``} ${t.invitedCount} ${this.declension(t.invitedCount,`друг`,`друга`,`друзей`)}</span>
+                    <div class="${t.invitedCount<3?`opacity-40 grayscale`:`opacity-100`}">
+                        <span class="text-sm font-bold ${n>=3?`text-zinc-400`:`text-white`}">
+                            ${t.name}
+                        </span>
                     </div>
                 </div>
                 <span class="${n>=3?`text-zinc-500`:`text-brand`} font-black text-sm">+${t.earned.toLocaleString()} ₽</span>
