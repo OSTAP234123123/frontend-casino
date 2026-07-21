@@ -226,7 +226,7 @@
             flex-direction: column;
         }
     </style>
-  <script type="module" crossorigin src="/assets/index-Bo_PausQ.js"></script>
+  <script type="module" crossorigin src="/assets/index-BPDAFLvI.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-ZkXqWjst.css">
 </head>
 
@@ -402,7 +402,8 @@
                     </div>
                     
                     <div class="bg-zinc-900/50 border border-zinc-800 rounded-2xl p-3 flex items-center justify-between mb-4 relative z-10">
-                        <span class="text-xs text-zinc-400 font-mono truncate mr-2" id="ref-link">https://t.me/@aviajetsbot?start=ref3453454</span>
+                        <!-- ИСПРАВЛЕНО: Убран хардкод старого формата реферальной ссылки -->
+                        <span class="text-xs text-zinc-400 font-mono truncate mr-2" id="ref-link">https://t.me/aviajetsbot</span>
                         <button onclick="window.copyRefLink?.()" class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap">Копировать</button>
                     </div>
                     
@@ -532,7 +533,7 @@
 
     </div>
 
-    <!-- МОДАЛКИ (Без изменений, чтобы не сломать) -->
+    <!-- МОДАЛКИ -->
     <div id="add-card-modal" class="hidden modal-overlay" style="align-items: center; padding: 1rem;">
         <div class="glass-panel rounded-3xl p-6 w-full max-w-md shadow-2xl animate-slide-up" style="max-height: 90vh; overflow-y: auto;">
             <div class="flex justify-between items-center mb-4">
@@ -645,29 +646,26 @@
         document.getElementById('nav-crash').addEventListener('click', () => switchTab('view-crash', 'nav-crash'));
         document.getElementById('nav-profile').addEventListener('click', () => switchTab('view-profile', 'nav-profile'));
 
-        // НОВЫЙ СКРИПТ ДЛЯ УПРАВЛЕНИЯ СТАВКОЙ (Min/Max/x2)
+        // Управление ставкой (Min/Max/x2)
         window.updateBetAmount = function(action) {
             const betInput = document.getElementById('custom-bet-input');
             let currentVal = parseFloat(betInput.value) || 0;
             const minBet = 10;
-            const maxBet = 100000; // Можешь поменять макс баланс здесь
+            const maxBet = 100000;
             
             if (action === 'min') {
                 currentVal = minBet;
             } else if (action === 'max') {
-                // Если баланс подключен, можно подставлять баланс. Пока ставим хардкод лимит
                 currentVal = maxBet; 
             } else if (action === '/2') {
                 currentVal = Math.max(minBet, Math.floor(currentVal / 2));
             } else if (action === 'x2') {
                 currentVal = Math.min(maxBet, currentVal * 2);
             } else {
-                // Если передали конкретное число (500, 1000)
                 currentVal = parseFloat(action);
             }
             
             betInput.value = currentVal;
-            // Если есть внешний обработчик в твоем TS, вызываем его событие
             betInput.dispatchEvent(new Event('input', { bubbles: true }));
         };
 
@@ -680,11 +678,9 @@
                 const user = tg.initDataUnsafe?.user;
                 if (!user) return;
 
-                // 1. Установка имен
+                // 1. Установка имени
                 const name = user.first_name + (user.last_name ? ' ' + user.last_name : '');
-                const usernameEl = document.getElementById('username');
                 const profNameEl = document.getElementById('prof-name');
-                if (usernameEl) usernameEl.textContent = name;
                 if (profNameEl) profNameEl.textContent = name;
 
                 // 2. Установка инициала
@@ -695,7 +691,7 @@
                 if (avatarInitialEl) avatarInitialEl.textContent = initial;
                 if (profAvatarInitialEl) profAvatarInitialEl.textContent = initial;
 
-                // 3. Функция безопасной загрузки аватарки
+                // 3. Загрузка аватарки
                 const applyAvatar = (containerId, initialElId, photoUrl) => {
                     const container = document.getElementById(containerId);
                     const initialEl = document.getElementById(initialElId);
@@ -705,13 +701,10 @@
                     const img = new Image();
                     img.src = photoUrl;
                     
-                    // Ждем пока картинка загрузится, чтобы не было "миганий"
                     img.onload = () => {
                         container.style.backgroundImage = `url('${photoUrl}')`;
                         container.style.backgroundSize = 'cover';
                         container.style.backgroundPosition = 'center';
-                        
-                        // Скрываем букву, когда картинка готова
                         if (initialEl) initialEl.style.display = 'none';
                     };
                 };
@@ -723,7 +716,7 @@
             }
         });
 
-        // Фикс клавиатуры
+        // Фикс виртуальной клавиатуры
         (function fixKeyboard() {
             let originalHeight = window.innerHeight;
             
